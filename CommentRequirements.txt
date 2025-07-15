@@ -1,0 +1,28 @@
+Fundamental Code Commenting Practices
+-------------------------------------
+
+1. **Let the code speak first**
+   - Aim for clear, self‑documenting code through good naming, structure and context before writing any comment. Comments should never compensate for messy code.
+
+2. **Comment only when the code cannot**
+   - Use comments to explain *why* (rationale, decisions, caveats) or *context* that is not obvious from the code itself.
+   - Avoid restating the obvious (e.g., “add two numbers”).
+
+3. **Write meaningful, complete sentences**
+   - Treat comments as prose. Each should read as a full, grammatically correct sentence to aid quick comprehension.
+
+4. **Be specific and action‑oriented**
+   - For TODO/FIXME notes, state the problem, required action and responsible person:
+     # TODO (@Alice): replace Euler solver with 2‑step predictor‑corrector for stability
+
+5. **Explain unavoidable ambiguity**
+   - If an abbreviation or short name is required, add a brief definitional comment right where it is declared.
+
+6. **Keep comments in sync with code**
+   - Out‑of‑date comments are worse than none; review and update them whenever the related code changes.
+
+7. **Prefer standard documentation mechanisms**
+   - Use language‑appropriate docstrings/help blocks and generators (e.g., Doxygen, pydoc) so that comments become part of the searchable API documentation.
+
+8. **Write for humans**
+   - Assume the reader is another developer (often future you). Strive for simplicity, clarity and consistency.

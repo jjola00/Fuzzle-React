@@ -1,0 +1,69 @@
+Project Requirements – React + TypeScript
+====================================
+
+1. React Fundamentals
+---------------------
+1.1 Components & JSX
+    • Function components returning JSX.
+    • Capital‑case component names.
+
+1.2 Props vs State
+    • Props: read‑only inputs.
+    • State: local, mutable via Hooks.
+
+1.3 Core Hooks
+    • useState – local state.
+    • useEffect – side‑effects.
+    • Custom hooks for reuse.
+
+1.4 Composition & Data Flow
+    • Break UI into a component hierarchy.
+    • One‑way data flow; lift state up.
+    • Keep state minimal and derive the rest.
+
+1.5 Rendering Patterns
+    • Conditional rendering (&&, ternary).
+    • Lists with map + stable keys.
+    • Context for shared, infrequently‑changing data.
+
+2. TypeScript Essentials
+------------------------
+2.1 Strict compiler flags: strict, noImplicitAny, strictNullChecks.
+2.2 Define props & state with interfaces/types.
+2.3 Use generics for reusable hooks/components.
+2.4 Discriminated unions for variant props.
+2.5 Utility types (Partial, Pick, Omit) for refactoring.
+
+3. Design Decisions & Best Practices
+------------------------------------
+3.1 Prefer functional components + Hooks; avoid classes.
+3.2 Single Responsibility Principle – one purpose per component.
+3.3 Immutable updates to state (spread, array methods).
+3.4 Co‑locate component, styles & tests; feature‑based folders.
+3.5 Composition over inheritance/HOC.
+3.6 Use React.StrictMode and eslint-plugin-react-hooks.
+3.7 Lazy load routes (React.lazy, Suspense).
+3.8 Accessibility first: semantic HTML + ARIA.
+3.9 Testing: React Testing Library + Jest.
+3.10 Code style: ESLint + Prettier + TypeScript rules.
+
+4. Suggested Folder Layout
+--------------------------
+/src
+  /components
+  /hooks
+  /pages
+  /contexts
+  /types
+  /utils
+  App.tsx
+  main.tsx
+
+5. Browser Support
+------------------
+   Latest Chrome, Firefox, Edge, Safari.
+
+6. References
+-------------
+   • React Quick Start & Thinking in React docs.
+   • TypeScript Handbook.
