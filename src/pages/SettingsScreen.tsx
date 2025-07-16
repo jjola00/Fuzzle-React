@@ -2,12 +2,17 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 
+// Props interface for SettingsScreen
+interface SettingsScreenProps {
+  onNavigateBack: () => void;
+}
+
 /**
  * SettingsScreen component implementing the Figma design
  * Features neumorphism styling and menu structure
  * Follows project requirements for component structure
  */
-export const SettingsScreen: React.FC = () => {
+export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onNavigateBack }) => {
   const { theme } = useTheme();
 
   // Debug log to ensure component is rendering
@@ -24,13 +29,31 @@ export const SettingsScreen: React.FC = () => {
   ];
 
   /**
-   * Handles back button press
-   * In a real app, this would navigate back
+   * Handles back button press with proper navigation
    */
   const handleBackPress = () => {
-    console.log('Back button pressed');
-    // TODO: Implement navigation back
+    console.log('=== BACK BUTTON PRESSED ===');
+    console.log('handleBackPress function called');
+    console.log('onNavigateBack prop:', onNavigateBack);
+    console.log('typeof onNavigateBack:', typeof onNavigateBack);
+    
+    try {
+      if (onNavigateBack) {
+        console.log('Calling onNavigateBack...');
+        onNavigateBack();
+        console.log('onNavigateBack called successfully');
+      } else {
+        console.log('ERROR: onNavigateBack is undefined or null');
+      }
+    } catch (error) {
+      console.log('ERROR calling onNavigateBack:', error);
+    }
+    
+    console.log('=== END BACK BUTTON PRESSED ===');
   };
+
+  // Add logging to check if component receives the right props
+  console.log('SettingsScreen props:', { onNavigateBack: typeof onNavigateBack });
 
   const styles = StyleSheet.create({
     container: {
@@ -55,31 +78,29 @@ export const SettingsScreen: React.FC = () => {
       backgroundColor: '#F0F0F3',
       justifyContent: 'center',
       alignItems: 'center',
-      // Neumorphism shadow effect - outer raised shadow
-      shadowColor: '#FFFFFF',
-      shadowOffset: { width: -5, height: -5 },
-      shadowOpacity: 1,
-      shadowRadius: 10,
-      elevation: Platform.OS === 'android' ? 5 : 0,
-    },
-    backButtonShadow: {
-      position: 'absolute',
-      width: 40,
-      height: 40,
-      borderRadius: 20,
-      backgroundColor: '#F0F0F3',
-      // Secondary shadow for depth
-      shadowColor: '#AEAEC0',
-      shadowOffset: { width: 5, height: 5 },
-      shadowOpacity: 0.3,
-      shadowRadius: 10,
-      elevation: Platform.OS === 'android' ? 2 : 0,
+      // Ensure button is touchable
+      zIndex: 10,
+      position: 'relative',
+      // Web-compatible boxShadow for neumorphism effect
+      boxShadow: Platform.OS === 'web' 
+        ? '-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3)' 
+        : undefined,
+      // Fallback shadows for native platforms
+      shadowColor: Platform.OS !== 'web' ? '#000' : undefined,
+      shadowOffset: Platform.OS !== 'web' ? { width: 0, height: 2 } : undefined,
+      shadowOpacity: Platform.OS !== 'web' ? 0.1 : undefined,
+      shadowRadius: Platform.OS !== 'web' ? 4 : undefined,
+      elevation: Platform.OS === 'android' ? 3 : 0,
+      // Debug border to make sure button is visible (remove this later)
+      borderWidth: 1,
+      borderColor: 'red',
     },
     backButtonText: {
       fontSize: 20,
       color: '#A3ADB2',
       fontWeight: '400',
       lineHeight: 24,
+      userSelect: 'none', // Prevent text selection on web
     },
     title: {
       fontSize: 28,
@@ -89,6 +110,7 @@ export const SettingsScreen: React.FC = () => {
       flex: 1,
       marginLeft: -40, // Compensate for back button to center the title
       fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+      userSelect: 'none', // Prevent text selection on web
     },
     content: {
       paddingHorizontal: 29,
@@ -101,34 +123,16 @@ export const SettingsScreen: React.FC = () => {
       marginBottom: 15,
       justifyContent: 'center',
       alignItems: 'center',
-      // Neumorphism shadow effect - outer raised shadow
-      shadowColor: '#FFFFFF',
-      shadowOffset: { width: -5, height: -5 },
-      shadowOpacity: 1,
-      shadowRadius: 10,
-      elevation: Platform.OS === 'android' ? 5 : 0,
-    },
-    menuItemShadow: {
-      position: 'absolute',
-      width: '100%',
-      height: 80,
-      borderRadius: 20,
-      backgroundColor: '#F0F0F3',
-      // Secondary shadow for depth
-      shadowColor: '#AEAEC0',
-      shadowOffset: { width: 5, height: 5 },
-      shadowOpacity: 0.3,
-      shadowRadius: 10,
-      elevation: Platform.OS === 'android' ? 2 : 0,
-    },
-    menuItemContent: {
-      backgroundColor: '#F0F0F3',
-      width: '100%',
-      height: 80,
-      borderRadius: 20,
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1,
+      // Web-compatible boxShadow for neumorphism effect
+      boxShadow: Platform.OS === 'web' 
+        ? '-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3)' 
+        : undefined,
+      // Fallback shadows for native platforms
+      shadowColor: Platform.OS !== 'web' ? '#000' : undefined,
+      shadowOffset: Platform.OS !== 'web' ? { width: 0, height: 2 } : undefined,
+      shadowOpacity: Platform.OS !== 'web' ? 0.1 : undefined,
+      shadowRadius: Platform.OS !== 'web' ? 4 : undefined,
+      elevation: Platform.OS === 'android' ? 3 : 0,
     },
     menuItemText: {
       fontSize: 20,
@@ -136,28 +140,13 @@ export const SettingsScreen: React.FC = () => {
       color: '#000000',
       textAlign: 'center',
       fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+      userSelect: 'none', // Prevent text selection on web
     },
     menuItemPressed: {
-      // Pressed state - inset shadow effect
-      shadowColor: '#AEAEC0',
-      shadowOffset: { width: 2, height: 2 },
-      shadowOpacity: 0.4,
-      shadowRadius: 4,
-      elevation: Platform.OS === 'android' ? 1 : 0,
-    },
-    // Additional neumorphism layer for better depth
-    neumorphismLayer: {
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      borderRadius: 20,
-      backgroundColor: '#F0F0F3',
-      // Subtle gradient effect simulation
-      shadowColor: '#000000',
-      shadowOffset: { width: 0, height: 0 },
-      shadowOpacity: 0.1,
-      shadowRadius: 1,
-      elevation: 1,
+      // Pressed state - inset shadow effect for web
+      boxShadow: Platform.OS === 'web' 
+        ? 'inset 2px 2px 4px rgba(174, 174, 192, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.3)' 
+        : undefined,
     },
   });
 
@@ -171,11 +160,9 @@ export const SettingsScreen: React.FC = () => {
       onPress={item.onPress}
       activeOpacity={0.95}
     >
-      <View style={styles.menuItemShadow} />
-      <View style={styles.neumorphismLayer} />
-      <View style={styles.menuItemContent}>
-        <Text style={styles.menuItemText}>{item.title}</Text>
-      </View>
+      <Text style={styles.menuItemText} selectable={false}>
+        {item.title}
+      </Text>
     </TouchableOpacity>
   );
 
@@ -188,13 +175,17 @@ export const SettingsScreen: React.FC = () => {
         <TouchableOpacity 
           style={styles.backButton}
           onPress={handleBackPress}
+          onPressIn={() => console.log('BACK BUTTON: onPressIn - touch detected')}
+          onPressOut={() => console.log('BACK BUTTON: onPressOut - touch released')}
           activeOpacity={0.8}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Go back to home screen"
         >
-          <View style={styles.backButtonShadow} />
-          <Text style={styles.backButtonText}>‹</Text>
+          <Text style={styles.backButtonText} selectable={false}>‹</Text>
         </TouchableOpacity>
         
-        <Text style={styles.title}>Settings</Text>
+        <Text style={styles.title} selectable={false}>Settings</Text>
       </View>
 
       {/* Settings menu items */}
