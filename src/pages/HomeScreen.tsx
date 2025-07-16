@@ -4,12 +4,17 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useAsyncState } from '@/hooks/useAsyncState';
 import { Button } from '@/components';
 
+// Props interface for HomeScreen
+interface HomeScreenProps {
+  onNavigateToSettings: () => void;
+}
+
 /**
  * HomeScreen component demonstrating page structure
  * Shows proper use of hooks, context, and component composition
  * Follows the suggested folder layout from requirements
  */
-export const HomeScreen: React.FC = () => {
+export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigateToSettings }) => {
   const { theme } = useTheme();
   const { state, execute } = useAsyncState<string>();
 
@@ -41,12 +46,14 @@ export const HomeScreen: React.FC = () => {
       fontWeight: '600',
       color: theme.colors.text,
       marginBottom: theme.spacing.md,
+      userSelect: 'none', // Prevent text selection on web
     },
     description: {
       fontSize: 16,
       color: theme.colors.textSecondary,
       marginBottom: theme.spacing.lg,
       lineHeight: 24,
+      userSelect: 'none', // Prevent text selection on web
     },
     section: {
       marginBottom: theme.spacing.xl,
@@ -56,6 +63,7 @@ export const HomeScreen: React.FC = () => {
       fontWeight: '600',
       color: theme.colors.text,
       marginBottom: theme.spacing.sm,
+      userSelect: 'none', // Prevent text selection on web
     },
     result: {
       padding: theme.spacing.md,
@@ -66,26 +74,34 @@ export const HomeScreen: React.FC = () => {
     resultText: {
       fontSize: 14,
       color: theme.colors.text,
+      userSelect: 'none', // Prevent text selection on web
     },
     errorText: {
       fontSize: 14,
       color: theme.colors.error,
+      userSelect: 'none', // Prevent text selection on web
+    },
+    settingsSection: {
+      marginTop: theme.spacing.xl,
+      paddingTop: theme.spacing.lg,
+      borderTopWidth: 1,
+      borderTopColor: theme.colors.surface,
     },
   });
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Home Screen</Text>
+        <Text style={styles.title} selectable={false}>Home Screen</Text>
 
-        <Text style={styles.description}>
+        <Text style={styles.description} selectable={false}>
           This is an example page component demonstrating the folder structure
           and component composition patterns outlined in the project
           requirements.
         </Text>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Async State Demo</Text>
+          <Text style={styles.sectionTitle} selectable={false}>Async State Demo</Text>
           <Button
             title="Run Async Operation"
             variant="primary"
@@ -96,15 +112,25 @@ export const HomeScreen: React.FC = () => {
 
           {state.data && (
             <View style={styles.result}>
-              <Text style={styles.resultText}>{state.data}</Text>
+              <Text style={styles.resultText} selectable={false}>{state.data}</Text>
             </View>
           )}
 
           {state.error && (
             <View style={styles.result}>
-              <Text style={styles.errorText}>Error: {state.error}</Text>
+              <Text style={styles.errorText} selectable={false}>Error: {state.error}</Text>
             </View>
           )}
+        </View>
+
+        <View style={styles.settingsSection}>
+          <Text style={styles.sectionTitle} selectable={false}>Navigation</Text>
+          <Button
+            title="Go to Settings"
+            variant="secondary"
+            onPress={onNavigateToSettings}
+            testID="settings-button"
+          />
         </View>
       </View>
     </ScrollView>
