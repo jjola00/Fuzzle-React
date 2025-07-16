@@ -18,22 +18,10 @@ const AppContent: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('loading');
 
   // Handler to switch screens
-  const navigateToScreen = (screen: ScreenType) => {
-    console.log('=== NAVIGATE TO SCREEN ===');
-    console.log('Current screen:', currentScreen);
-    console.log('Target screen:', screen);
-    setCurrentScreen(screen);
-    console.log('setCurrentScreen called');
-    console.log('=== END NAVIGATE TO SCREEN ===');
-  };
+  const navigateToScreen = (screen: ScreenType) => setCurrentScreen(screen);
 
-  // Debug logs
-  console.log('AppContent rendering, currentScreen:', currentScreen);
-  console.log('Theme:', theme);
-
-  // Safety check to ensure theme is loaded
+  // Safety check to ensure theme is loaded before rendering
   if (!theme) {
-    console.log('Theme not loaded, returning null');
     return null;
   }
 
@@ -70,13 +58,7 @@ const AppContent: React.FC = () => {
       )}
       {currentScreen === 'settings' && (
         <SettingsScreen 
-          onNavigateBack={() => {
-            console.log('=== SETTINGS SCREEN onNavigateBack CALLED ===');
-            console.log('About to call navigateToScreen(home)');
-            navigateToScreen('home');
-            console.log('navigateToScreen(home) completed');
-            console.log('=== END SETTINGS SCREEN onNavigateBack ===');
-          }}
+          onNavigateBack={() => navigateToScreen('home')}
         />
       )}
     </View>
@@ -89,7 +71,6 @@ const AppContent: React.FC = () => {
  * Wraps the app with necessary providers and development tools
  */
 export const App: React.FC = () => {
-  console.log('App component rendering');
   return (
     <React.StrictMode>
       <ErrorBoundary>
