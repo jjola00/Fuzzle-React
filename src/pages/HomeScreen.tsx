@@ -13,6 +13,9 @@ export const HomeScreen: React.FC = () => {
   const { theme } = useTheme();
   const { state, execute } = useAsyncState<string>();
 
+  // Debug log to ensure component is rendering
+  console.log('HomeScreen rendering with theme:', theme);
+
   /**
    * Simulates an async operation for demonstration
    * Shows how to use the custom useAsyncState hook

@@ -4,9 +4,6 @@
 export { Button } from './common/Button';
 export { ErrorBoundary } from './common/ErrorBoundary';
 
-// Page exports
-export { HomeScreen } from '../pages/HomeScreen';
-
 // TODO: Add more component exports as they are created
 // Example structure:
 // export { Header } from './common/Header';
