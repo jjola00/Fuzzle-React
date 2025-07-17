@@ -18,20 +18,20 @@ fix_npm_permissions() {
     echo -e "${YELLOW}🔧 Fixing npm global permissions...${NC}"
     
     # Create npm global directory if it doesn't exist
-    mkdir -p ~/.npm-global
-    mkdir -p ~/.npm-global/lib
-    mkdir -p ~/.npm-global/bin
+    mkdir -p $HOME/.npm-global
+    mkdir -p $HOME/.npm-global/lib
+    mkdir -p $HOME/.npm-global/bin
     
     # Set npm prefix to user directory
-    npm config set prefix '~/.npm-global'
+    npm config set prefix "$HOME/.npm-global"
     
     # Add to PATH if not already there
-    if ! grep -q "~/.npm-global/bin" ~/.bashrc; then
-        echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+    if ! grep -q "$HOME/.npm-global/bin" ~/.bashrc; then
+        echo 'export PATH=$HOME/.npm-global/bin:$PATH' >> ~/.bashrc
     fi
     
     # Export for current session
-    export PATH=~/.npm-global/bin:$PATH
+    export PATH=$HOME/.npm-global/bin:$PATH
     
     echo -e "${GREEN}✅ npm permissions configured${NC}"
 }
