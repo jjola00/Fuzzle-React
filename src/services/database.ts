@@ -25,12 +25,17 @@ class DatabaseService {
    */
   async getSessions(userId?: string, offset: number = 0, limit: number = 5): Promise<SessionData[]> {
     try {
-      const { data, error } = await supabase
+      const query = supabase
         .from('sessions')
         .select('*')
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
 
+      if (userId) {
+        query.eq('user_id', userId);
+      }
+
+      const { data, error } = await query;
       if (error) {
         throw new Error(`Failed to fetch sessions: ${error.message}`);
       }
