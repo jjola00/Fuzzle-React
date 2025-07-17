@@ -27,13 +27,8 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
 
   const ITEMS_PER_PAGE = 5;
 
-  // Fetch initial sessions on component mount
-  useEffect(() => {
-    loadSessions(0, true);
-  }, []);
-
   // Load sessions with pagination
-  const loadSessions = async (page: number, isInitialLoad: boolean = false) => {
+  const loadSessions = React.useCallback(async (page: number, isInitialLoad: boolean = false) => {
     const offset = page * ITEMS_PER_PAGE;
     
     if (isInitialLoad) {
