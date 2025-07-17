@@ -22,7 +22,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   // Debug log to ensure component is rendering
   // eslint-disable-next-line no-console
-  console.log("HomeScreen rendering with theme:", theme);
+  if (__DEV__) {
+    console.log("HomeScreen rendering with theme:", theme);
+  }
 
   /**
    * Simulates an async operation for demonstration
