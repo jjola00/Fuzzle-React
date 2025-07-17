@@ -31,6 +31,12 @@ export const defaultTheme: Theme = {
 };
 
 /**
+ * Light theme configuration (alias for defaultTheme)
+ * Provides consistency with dark theme naming
+ */
+export const lightTheme: Theme = defaultTheme;
+
+/**
  * Dark theme configuration for the Fuzzle app
  * Provides dark mode support with proper contrast ratios
  */

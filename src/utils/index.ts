@@ -26,18 +26,18 @@ export const formatCurrency = (
 };
 
 /**
- * Utility function to debounce function calls
- * Prevents excessive function calls during rapid user input
+ * Debounce function to limit the rate of function calls
+ * Useful for search inputs and other high-frequency events
  */
 export const debounce = <T extends (...args: any[]) => void>(
   func: T,
   delay: number
 ): ((...args: Parameters<T>) => void) => {
   let timeoutId: NodeJS.Timeout;
-
-  return (...args: Parameters<T>) => {
+  
+  return (..._args: Parameters<T>) => {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func(...args), delay);
+    timeoutId = setTimeout(() => func(..._args), delay);
   };
 };
 
