@@ -1,22 +1,17 @@
-import React from 'react';
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
-import { useTheme } from '@/contexts/ThemeContext';
+import React, { useMemo } from "react";
+import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
+import { useTheme } from "@/contexts/ThemeContext";
 
 /**
  * Button variant types for different visual styles
  * Uses discriminated unions for type safety
  */
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'text';
+type ButtonVariant = "primary" | "secondary" | "outline" | "text";
 
 /**
  * Button size types for consistent sizing
  */
-type ButtonSize = 'small' | 'medium' | 'large';
+type ButtonSize = "small" | "medium" | "large";
 
 /**
  * Props interface for the Button component
@@ -39,8 +34,8 @@ interface ButtonProps {
  */
 export const Button: React.FC<ButtonProps> = ({
   title,
-  variant = 'primary',
-  size = 'medium',
+  variant = "primary",
+  size = "medium",
   loading = false,
   disabled = false,
   onPress,
@@ -52,66 +47,73 @@ export const Button: React.FC<ButtonProps> = ({
    * Generates button styles based on variant and theme
    * Keeps styles derived from props and theme state
    */
-  const getButtonStyles = () => {
-    const baseStyle = {
-      borderRadius: theme.borderRadius.md,
-      justifyContent: 'center' as const,
-      alignItems: 'center' as const,
-      flexDirection: 'row' as const,
+  const getButtonStyles = useMemo(() => {
+    return () => {
+      const baseStyle = {
+        borderRadius: theme.borderRadius.md,
+        justifyContent: "center" as const,
+        alignItems: "center" as const,
+        flexDirection: "row" as const,
+      };
+
+      const sizeStyles = {
+        small: {
+          paddingHorizontal: theme.spacing.sm,
+          paddingVertical: theme.spacing.xs,
+          minHeight: 32,
+        },
+        medium: {
+          paddingHorizontal: theme.spacing.md,
+          paddingVertical: theme.spacing.sm,
+          minHeight: 44,
+        },
+        large: {
+          paddingHorizontal: theme.spacing.lg,
+          paddingVertical: theme.spacing.md,
+          minHeight: 52,
+        },
+      };
+
+      const variantStyles = {
+        primary: {
+          backgroundColor: theme.colors.primary,
+        },
+        secondary: {
+          backgroundColor: theme.colors.secondary,
+        },
+        outline: {
+          backgroundColor: "transparent",
+          borderWidth: 1,
+          borderColor: theme.colors.primary,
+        },
+        text: {
+          backgroundColor: "transparent",
+        },
+      };
+
+      const disabledStyle =
+        disabled || loading
+          ? {
+              opacity: 0.5,
+            }
+          : {};
+
+      return [
+        baseStyle,
+        sizeStyles[size],
+        variantStyles[variant],
+        disabledStyle,
+      ];
     };
-
-    const sizeStyles = {
-      small: {
-        paddingHorizontal: theme.spacing.sm,
-        paddingVertical: theme.spacing.xs,
-        minHeight: 32,
-      },
-      medium: {
-        paddingHorizontal: theme.spacing.md,
-        paddingVertical: theme.spacing.sm,
-        minHeight: 44,
-      },
-      large: {
-        paddingHorizontal: theme.spacing.lg,
-        paddingVertical: theme.spacing.md,
-        minHeight: 52,
-      },
-    };
-
-    const variantStyles = {
-      primary: {
-        backgroundColor: theme.colors.primary,
-      },
-      secondary: {
-        backgroundColor: theme.colors.secondary,
-      },
-      outline: {
-        backgroundColor: 'transparent',
-        borderWidth: 1,
-        borderColor: theme.colors.primary,
-      },
-      text: {
-        backgroundColor: 'transparent',
-      },
-    };
-
-    const disabledStyle =
-      disabled || loading
-        ? {
-            opacity: 0.5,
-          }
-        : {};
-
-    return [baseStyle, sizeStyles[size], variantStyles[variant], disabledStyle];
-  };
+  }, [theme, size, variant, disabled, loading]);
 
   /**
    * Generates text styles based on variant and theme
    */
   const getTextStyles = () => {
     const baseTextStyle = {
-      fontWeight: '600' as const,
-      textAlign: 'center' as const,
+      fontWeight: "600" as const,
+      textAlign: "center" as const,
     };
 
     const sizeTextStyles = {
@@ -139,12 +141,13 @@ export const Button: React.FC<ButtonProps> = ({
       accessibilityRole="button"
       accessibilityLabel={title}
       accessibilityState={{ disabled: disabled || loading }}
-      testID={testID}>
+      testID={testID}
+    >
       {loading && (
         <ActivityIndicator
           size="small"
           color={
-            variant === 'outline' || variant === 'text'
+            variant === "outline" || variant === "text"
               ? theme.colors.primary
               : theme.colors.background
           }

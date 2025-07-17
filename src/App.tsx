@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
-import { View } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
-import { Button, ErrorBoundary } from '@/components';
-import { HomeScreen, LoadingScreen, SettingsScreen } from '@/pages';
+import React, { useState, useEffect } from "react";
+import { View } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import * as Font from "expo-font";
+import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
+import { Button, ErrorBoundary } from "@/components";
+import {
+  HomeScreen,
+  LoadingScreen,
+  SettingsScreen,
+  AccountSettingsScreen,
+} from "@/pages";
 
 // Define screen types for navigation
-type ScreenType = 'loading' | 'home' | 'settings';
+type ScreenType = "loading" | "home" | "settings" | "account";
 
 /**
  * Main AppContent component
@@ -15,13 +21,26 @@ type ScreenType = 'loading' | 'home' | 'settings';
  */
 const AppContent: React.FC = () => {
   const { theme, isDarkMode } = useTheme();
-  const [currentScreen, setCurrentScreen] = useState<ScreenType>('loading');
+  const [currentScreen, setCurrentScreen] = useState<ScreenType>("loading");
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  // Load fonts on component mount
+  useEffect(() => {
+    Font.loadAsync({
+      "MavenPro-Regular": require("../assets/fonts/MavenPro-Regular.ttf"),
+      "MavenPro-Medium": require("../assets/fonts/MavenPro-Medium.ttf"),
+      "MavenPro-SemiBold": require("../assets/fonts/MavenPro-SemiBold.ttf"),
+      "MavenPro-Bold": require("../assets/fonts/MavenPro-Bold.ttf"),
+      "MavenPro-ExtraBold": require("../assets/fonts/MavenPro-ExtraBold.ttf"),
+      "MavenPro-Black": require("../assets/fonts/MavenPro-Black.ttf"),
+    }).then(() => setFontsLoaded(true));
+  }, []);
 
   // Handler to switch screens
   const navigateToScreen = (screen: ScreenType) => setCurrentScreen(screen);
 
-  // Safety check to ensure theme is loaded before rendering
-  if (!theme) {
+  // Safety check to ensure theme and fonts are loaded before rendering
+  if (!theme || !fontsLoaded) {
     return null;
   }
 
@@ -29,15 +48,17 @@ const AppContent: React.FC = () => {
   const renderLoadingScreen = () => (
     <>
       <LoadingScreen />
-      <View style={{ 
-        alignItems: 'center', 
-        marginTop: theme.spacing.lg,
-        padding: theme.spacing.md,
-      }}>
+      <View
+        style={{
+          alignItems: "center",
+          marginTop: theme.spacing.lg,
+          padding: theme.spacing.md,
+        }}
+      >
         <Button
           title="Continue to Home Screen"
           variant="primary"
-          onPress={() => navigateToScreen('home')}
+          onPress={() => navigateToScreen("home")}
           testID="continue-button"
         />
       </View>
@@ -45,20 +66,26 @@ const AppContent: React.FC = () => {
   );
 
   return (
-    <View style={{ 
-      flex: 1, 
-      backgroundColor: theme.colors.background,
-    }}>
-      <StatusBar style={isDarkMode ? 'light' : 'dark'} />
-      {currentScreen === 'loading' && renderLoadingScreen()}
-      {currentScreen === 'home' && (
-        <HomeScreen 
-          onNavigateToSettings={() => navigateToScreen('settings')}
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+      }}
+    >
+      <StatusBar style={isDarkMode ? "light" : "dark"} />
+      {currentScreen === "loading" && renderLoadingScreen()}
+      {currentScreen === "home" && (
+        <HomeScreen onNavigateToSettings={() => navigateToScreen("settings")} />
+      )}
+      {currentScreen === "settings" && (
+        <SettingsScreen
+          onNavigateBack={() => navigateToScreen("home")}
+          onNavigateToAccount={() => navigateToScreen("account")}
         />
       )}
-      {currentScreen === 'settings' && (
-        <SettingsScreen 
-          onNavigateBack={() => navigateToScreen('home')}
+      {currentScreen === "account" && (
+        <AccountSettingsScreen
+          onNavigateBack={() => navigateToScreen("settings")}
         />
       )}
     </View>
