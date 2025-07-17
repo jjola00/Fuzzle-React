@@ -25,41 +25,40 @@
     "postinstall": "expo install --fix"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~5.0.4",
     "expo": "~53.0.17",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
-    "react-native": "0.79.5",
     "react-dom": "19.0.0",
-    "react-native-web": "^0.20.0",
-    "@expo/metro-runtime": "~5.0.4"
+    "react-native": "0.79.5",
+    "react-native-web": "^0.20.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@types/jest": "^29.5.8",
     "@types/react": "~19.0.10",
+    "@types/react-test-renderer": "^18.0.7",
     "@typescript-eslint/eslint-plugin": "^8.37.0",
     "@typescript-eslint/parser": "^8.37.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "eslint": "^9.31.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-native": "^5.0.0",
-    "prettier": "^3.6.2",
-    "typescript": "~5.8.3",
     "jest": "^29.7.0",
-    "jest-expo": "~53.0.9",
-    "@testing-library/react-native": "^12.4.3",
-    "@testing-library/jest-native": "^5.4.3",
-    "@types/jest": "^29.5.8",
-    "react-test-renderer": "19.0.0",
-    "@types/react-test-renderer": "^18.0.7",
     "jest-environment-jsdom": "^29.7.0",
-    "jest-fetch-mock": "^3.0.3"
+    "jest-expo": "~53.0.9",
+    "jest-fetch-mock": "^3.0.3",
+    "prettier": "^3.6.2",
+    "react-test-renderer": "19.0.0",
+    "typescript": "~5.8.3",
+    "@testing-library/react-native": "^12.4.3"
   },
   "jest": {
     "preset": "jest-expo",
     "setupFilesAfterEnv": [
-      "@testing-library/jest-native/extend-expect",
       "<rootDir>/jest.setup.js"
     ],
     "testMatch": [
@@ -85,7 +84,7 @@
         "statements": 70
       }
     },
-    "moduleNameMapping": {
+    "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1"
     }
   },

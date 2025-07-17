@@ -1,4 +1,4 @@
-import { Theme } from '@/types';
+import { Theme } from "@/types";
 
 /**
  * Default theme configuration for the Fuzzle app
@@ -6,15 +6,15 @@ import { Theme } from '@/types';
  */
 export const defaultTheme: Theme = {
   colors: {
-    primary: '#007AFF',
-    secondary: '#5856D6',
-    background: '#FFFFFF',
-    surface: '#F2F2F7',
-    text: '#000000',
-    textSecondary: '#8E8E93',
-    error: '#FF3B30',
-    success: '#30D158',
-    warning: '#FF9500',
+    primary: "#007AFF",
+    secondary: "#5856D6",
+    background: "#FFFFFF",
+    surface: "#F2F2F7",
+    text: "#000000",
+    textSecondary: "#8E8E93",
+    error: "#FF3B30",
+    success: "#30D158",
+    warning: "#FF9500",
   },
   spacing: {
     xs: 4,
@@ -42,15 +42,15 @@ export const lightTheme: Theme = defaultTheme;
  */
 export const darkTheme: Theme = {
   colors: {
-    primary: '#0A84FF',
-    secondary: '#5E5CE6',
-    background: '#000000',
-    surface: '#1C1C1E',
-    text: '#FFFFFF',
-    textSecondary: '#8E8E93',
-    error: '#FF453A',
-    success: '#32D74B',
-    warning: '#FF9F0A',
+    primary: "#0A84FF",
+    secondary: "#5E5CE6",
+    background: "#000000",
+    surface: "#1C1C1E",
+    text: "#FFFFFF",
+    textSecondary: "#8E8E93",
+    error: "#FF453A",
+    success: "#32D74B",
+    warning: "#FF9F0A",
   },
   spacing: {
     xs: 4,
@@ -71,7 +71,7 @@ export const darkTheme: Theme = {
  */
 export const getThemeColor = (
   theme: Theme,
-  colorKey: keyof Theme['colors']
+  colorKey: keyof Theme["colors"],
 ): string => {
   return theme.colors[colorKey];
 };
@@ -81,7 +81,7 @@ export const getThemeColor = (
  */
 export const getThemeSpacing = (
   theme: Theme,
-  spacingKey: keyof Theme['spacing']
+  spacingKey: keyof Theme["spacing"],
 ): number => {
   return theme.spacing[spacingKey];
 };

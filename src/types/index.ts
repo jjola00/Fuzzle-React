@@ -46,12 +46,12 @@ export interface AppState {
 // Utility types using TypeScript utilities as mentioned in requirements
 export type OptionalUser = Partial<User>;
 export type UserKeys = keyof User;
-export type RequiredUserFields = Pick<User, 'id' | 'name' | 'email'>;
-export type UserWithoutId = Omit<User, 'id'>;
+export type RequiredUserFields = Pick<User, "id" | "name" | "email">;
+export type UserWithoutId = Omit<User, "id">;
 
 // Discriminated union for different app states
 export type AppStatus =
-  | { type: 'loading' }
-  | { type: 'authenticated'; user: User }
-  | { type: 'unauthenticated' }
-  | { type: 'error'; message: string };
+  | { type: "loading" }
+  | { type: "authenticated"; user: User }
+  | { type: "unauthenticated" }
+  | { type: "error"; message: string };

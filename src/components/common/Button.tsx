@@ -1,22 +1,17 @@
-import React from 'react';
-import {
-  TouchableOpacity,
-  Text,
-  ActivityIndicator,
-  View,
-} from 'react-native';
-import { useTheme } from '@/contexts/ThemeContext';
+import React from "react";
+import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
+import { useTheme } from "@/contexts/ThemeContext";
 
 /**
  * Button variant types for different visual styles
  * Uses discriminated unions for type safety
  */
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'text';
+type ButtonVariant = "primary" | "secondary" | "outline" | "text";
 
 /**
  * Button size types for consistent sizing
  */
-type ButtonSize = 'small' | 'medium' | 'large';
+type ButtonSize = "small" | "medium" | "large";
 
 /**
  * Props interface for the Button component
@@ -39,8 +34,8 @@ interface ButtonProps {
  */
 export const Button: React.FC<ButtonProps> = ({
   title,
-  variant = 'primary',
-  size = 'medium',
+  variant = "primary",
+  size = "medium",
   loading = false,
   disabled = false,
   onPress,
@@ -55,9 +50,9 @@ export const Button: React.FC<ButtonProps> = ({
   const getButtonStyles = () => {
     const baseStyle = {
       borderRadius: theme.borderRadius.md,
-      justifyContent: 'center' as const,
-      alignItems: 'center' as const,
-      flexDirection: 'row' as const,
+      justifyContent: "center" as const,
+      alignItems: "center" as const,
+      flexDirection: "row" as const,
     };
 
     const sizeStyles = {
@@ -86,12 +81,12 @@ export const Button: React.FC<ButtonProps> = ({
         backgroundColor: theme.colors.secondary,
       },
       outline: {
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
         borderWidth: 1,
         borderColor: theme.colors.primary,
       },
       text: {
-        backgroundColor: 'transparent',
+        backgroundColor: "transparent",
       },
     };
 
@@ -110,8 +105,8 @@ export const Button: React.FC<ButtonProps> = ({
    */
   const getTextStyles = () => {
     const baseTextStyle = {
-      fontWeight: '600' as const,
-      textAlign: 'center' as const,
+      fontWeight: "600" as const,
+      textAlign: "center" as const,
     };
 
     const sizeTextStyles = {
@@ -139,12 +134,13 @@ export const Button: React.FC<ButtonProps> = ({
       accessibilityRole="button"
       accessibilityLabel={title}
       accessibilityState={{ disabled: disabled || loading }}
-      testID={testID}>
+      testID={testID}
+    >
       {loading && (
         <ActivityIndicator
           size="small"
           color={
-            variant === 'outline' || variant === 'text'
+            variant === "outline" || variant === "text"
               ? theme.colors.primary
               : theme.colors.background
           }

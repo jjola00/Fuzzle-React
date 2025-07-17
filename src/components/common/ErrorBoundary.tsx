@@ -1,6 +1,6 @@
-import React, { Component, ReactNode } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Button } from './Button';
+import React, { Component, ReactNode } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { Button } from "./Button";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -40,7 +40,7 @@ export class ErrorBoundary extends Component<
    */
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error to console in development
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
 
     // TODO: Report error to error tracking service in production
     // Example: errorReportingService.logError(error, errorInfo);
@@ -66,7 +66,7 @@ export class ErrorBoundary extends Component<
         <View style={styles.container}>
           <Text style={styles.title}>Something went wrong</Text>
           <Text style={styles.message}>
-            {this.state.error?.message || 'An unexpected error occurred'}
+            {this.state.error?.message || "An unexpected error occurred"}
           </Text>
           <Button
             title="Try Again"
@@ -89,23 +89,23 @@ export class ErrorBoundary extends Component<
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: "#f8f9fa",
   },
   title: {
     fontSize: 24,
-    fontWeight: '600',
-    color: '#dc3545',
+    fontWeight: "600",
+    color: "#dc3545",
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   message: {
     fontSize: 16,
-    color: '#6c757d',
+    color: "#6c757d",
     marginBottom: 24,
-    textAlign: 'center',
+    textAlign: "center",
     lineHeight: 24,
   },
 });

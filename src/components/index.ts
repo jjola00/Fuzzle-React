@@ -1,8 +1,8 @@
 // Component exports for better organization and clean imports
 // Following feature-based folder structure as mentioned in requirements
 
-export { Button } from './common/Button';
-export { ErrorBoundary } from './common/ErrorBoundary';
+export { Button } from "./common/Button";
+export { ErrorBoundary } from "./common/ErrorBoundary";
 
 // TODO: Add more component exports as they are created
 // Example structure:

@@ -5,9 +5,9 @@ import React, {
   useCallback,
   ReactNode,
   useMemo,
-} from 'react';
-import { Theme } from '@/types';
-import { defaultTheme, darkTheme, lightTheme } from '@/utils/theme';
+} from "react";
+import { Theme } from "@/types";
+import { defaultTheme, darkTheme, lightTheme } from "@/utils/theme";
 
 interface ThemeContextType {
   theme: Theme;
@@ -57,7 +57,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   const setTheme = useCallback((theme: Theme) => {
     setCurrentTheme(theme);
     // Update dark mode flag based on theme colors
-    setIsDarkMode(theme.colors.background === '#000000');
+    setIsDarkMode(theme.colors.background === "#000000");
   }, []);
 
   const value = useMemo(
@@ -67,13 +67,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       toggleTheme,
       setTheme,
     }),
-    [currentTheme, isDarkMode, toggleTheme, setTheme]
+    [currentTheme, isDarkMode, toggleTheme, setTheme],
   );
 
   return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 };
 
@@ -85,7 +83,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };
