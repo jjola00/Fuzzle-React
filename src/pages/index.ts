@@ -5,6 +5,7 @@ export { HomeScreen } from "./HomeScreen";
 export { LoadingScreen } from "./LoadingScreen";
 export { SettingsScreen } from "./SettingsScreen";
 export { AccountSettingsScreen } from "./AccountSettingsScreen";
+export { StudySessionsScreen } from "./StudySessionsScreen";
 
 // TODO: Add more page exports as they are created
 // Example structure:

@@ -9,10 +9,11 @@ import {
   LoadingScreen,
   SettingsScreen,
   AccountSettingsScreen,
+  StudySessionsScreen,
 } from "@/pages";
 
 // Define screen types for navigation
-type ScreenType = "loading" | "home" | "settings" | "account";
+type ScreenType = "loading" | "home" | "settings" | "account" | "sessions";
 
 /**
  * Main AppContent component
@@ -75,7 +76,10 @@ const AppContent: React.FC = () => {
       <StatusBar style={isDarkMode ? "light" : "dark"} />
       {currentScreen === "loading" && renderLoadingScreen()}
       {currentScreen === "home" && (
-        <HomeScreen onNavigateToSettings={() => navigateToScreen("settings")} />
+        <HomeScreen 
+          onNavigateToSettings={() => navigateToScreen("settings")}
+          onNavigateToSessions={() => navigateToScreen("sessions")}
+        />
       )}
       {currentScreen === "settings" && (
         <SettingsScreen
@@ -86,6 +90,11 @@ const AppContent: React.FC = () => {
       {currentScreen === "account" && (
         <AccountSettingsScreen
           onNavigateBack={() => navigateToScreen("settings")}
+        />
+      )}
+      {currentScreen === "sessions" && (
+        <StudySessionsScreen
+          onNavigateBack={() => navigateToScreen("home")}
         />
       )}
     </View>
