@@ -14,44 +14,38 @@ interface SettingsScreenProps {
 }
 
 /**
- * SettingsScreen component implementing the Figma design
- * Features neumorphism styling and menu structure
- * Follows project requirements for component structure
+ * SettingsScreen component implementing the exact Figma design
+ * Features neumorphism styling and exact menu structure from design
+ * Uses Maven Pro font and specific measurements from Figma
  */
 export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   onNavigateBack,
 }) => {
-  // Example settings data
+  // Menu items matching the exact Figma design
   const settingsItems = [
     {
-      title: "Account",
-      icon: "👤",
-      action: () => console.log("Account pressed"),
+      title: "My account",
+      action: () => console.log("My account pressed"),
     },
     {
-      title: "Privacy",
-      icon: "🔒",
-      action: () => console.log("Privacy pressed"),
+      title: "Point tally",
+      action: () => console.log("Point tally pressed"),
     },
     {
-      title: "Notifications",
-      icon: "🔔",
-      action: () => console.log("Notifications pressed"),
+      title: "Report a bug",
+      action: () => console.log("Report a bug pressed"),
     },
     {
-      title: "Appearance",
-      icon: "🎨",
-      action: () => console.log("Appearance pressed"),
+      title: "Leave a review",
+      action: () => console.log("Leave a review pressed"),
     },
     {
-      title: "Language",
-      icon: "🌐",
-      action: () => console.log("Language pressed"),
+      title: "Privacy policy",
+      action: () => console.log("Privacy policy pressed"),
     },
     {
-      title: "Help & Support",
-      icon: "❓",
-      action: () => console.log("Help pressed"),
+      title: "Terms of service",
+      action: () => console.log("Terms of service pressed"),
     },
   ];
 
@@ -63,68 +57,116 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     container: {
       flex: 1,
       backgroundColor: "#F0F0F3",
+      width: 375,
+      height: 812,
+      position: "relative",
     },
     header: {
       flexDirection: "row",
       alignItems: "center",
-      paddingHorizontal: 16,
-      paddingVertical: 12,
+      paddingHorizontal: 21,
+      paddingTop: 58,
+      paddingBottom: 20,
       backgroundColor: "#F0F0F3",
-      ...(Platform.OS !== "web" && {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 5,
-      }),
     },
     backButton: {
+      width: 40,
+      height: 40,
+      backgroundColor: "#F0F0F3",
+      borderRadius: 20,
+      justifyContent: "center",
+      alignItems: "center",
       marginRight: 16,
+      ...(Platform.OS !== "web" && {
+        shadowColor: "#FFFFFF",
+        shadowOffset: { width: -5, height: -5 },
+        shadowOpacity: 1,
+        shadowRadius: 10,
+        elevation: 5,
+      }),
+      // Additional shadow for neumorphic effect
+      ...(Platform.OS !== "web" && {
+        shadowColor: "rgba(174, 174, 192, 0.3)",
+        shadowOffset: { width: 5, height: 5 },
+        shadowOpacity: 1,
+        shadowRadius: 10,
+      }),
     },
     backButtonText: {
-      fontSize: 16,
+      fontSize: 18,
+      fontWeight: "bold",
       color: "#A3ADB2",
     },
     headerTitle: {
-      fontSize: 16,
-      fontWeight: "500",
+      fontSize: 28,
+      fontWeight: "600",
       color: "#000000",
+      fontFamily: Platform.OS === "ios" ? "Maven Pro" : "Maven Pro",
+      lineHeight: 13,
+      textAlign: "center",
+      flex: 1,
+      marginRight: 56, // Compensate for back button width
     },
     content: {
       flex: 1,
-      paddingHorizontal: 16,
+      paddingHorizontal: 27,
       paddingTop: 20,
     },
     menuItem: {
-      paddingVertical: 16,
-      paddingHorizontal: 20,
+      width: 321,
+      height: 80,
       backgroundColor: "#F0F0F3",
-      marginVertical: 4,
-      borderRadius: 8,
+      marginBottom: 15,
+      borderRadius: 20,
+      justifyContent: "center",
+      alignItems: "center",
+      alignSelf: "center",
+      // Neumorphic shadow effect from Figma
       ...(Platform.OS !== "web" && {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
+        shadowColor: "#FFFFFF",
+        shadowOffset: { width: -5, height: -5 },
+        shadowOpacity: 1,
+        shadowRadius: 10,
+        elevation: 5,
+      }),
+      // Secondary shadow for depth
+      ...(Platform.OS === "android" && {
+        elevation: 10,
       }),
     },
     menuItemText: {
-      fontSize: 16,
+      fontSize: 20,
       fontWeight: "500",
       color: "#000000",
+      fontFamily: Platform.OS === "ios" ? "Maven Pro" : "Maven Pro",
+      lineHeight: 24,
+      textAlign: "center",
+    },
+    // Individual positioning for web shadow effects
+    menuItemShadow: {
+      ...(Platform.OS === "web" && {
+        boxShadow: "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF",
+      }),
+    },
+    backButtonShadow: {
+      ...(Platform.OS === "web" && {
+        boxShadow: "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF",
+      }),
     },
   });
 
-  const renderMenuItem = (item: (typeof settingsItems)[0]) => (
+  const renderMenuItem = (item: (typeof settingsItems)[0], index: number) => (
     <TouchableOpacity
-      key={item.title}
-      style={[styles.menuItem]}
+      key={`${item.title}-${index}`}
+      style={[styles.menuItem, styles.menuItemShadow]}
       onPress={item.action}
       activeOpacity={0.95}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel={`${item.title} settings option`}
     >
       <Text style={styles.menuItemText} selectable={false}>
-        {item.icon} {item.title}
+        {item.title}
       </Text>
     </TouchableOpacity>
   );
@@ -135,12 +177,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
       <View style={styles.header}>
         <TouchableOpacity
-          style={styles.backButton}
+          style={[styles.backButton, styles.backButtonShadow]}
           onPress={handleBackPress}
           activeOpacity={0.8}
           accessible={true}
           accessibilityRole="button"
-          accessibilityLabel="Go back to home screen"
+          accessibilityLabel="Go back to previous screen"
         >
           <Text style={styles.backButtonText} selectable={false}>
             ‹
