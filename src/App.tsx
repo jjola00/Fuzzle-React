@@ -4,10 +4,10 @@ import { StatusBar } from "expo-status-bar";
 import * as Font from 'expo-font';
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import { Button, ErrorBoundary } from "@/components";
-import { HomeScreen, LoadingScreen, SettingsScreen } from "@/pages";
+import { HomeScreen, LoadingScreen, SettingsScreen, AccountSettingsScreen } from "@/pages";
 
 // Define screen types for navigation
-type ScreenType = "loading" | "home" | "settings";
+type ScreenType = "loading" | "home" | "settings" | "account";
 
 /**
  * Main AppContent component
@@ -73,7 +73,13 @@ const AppContent: React.FC = () => {
         <HomeScreen onNavigateToSettings={() => navigateToScreen("settings")} />
       )}
       {currentScreen === "settings" && (
-        <SettingsScreen onNavigateBack={() => navigateToScreen("home")} />
+        <SettingsScreen 
+          onNavigateBack={() => navigateToScreen("home")}
+          onNavigateToAccount={() => navigateToScreen("account")}
+        />
+      )}
+      {currentScreen === "account" && (
+        <AccountSettingsScreen onNavigateBack={() => navigateToScreen("settings")} />
       )}
     </View>
   );

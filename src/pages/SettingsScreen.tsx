@@ -4,6 +4,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 
 interface SettingsScreenProps {
   onNavigateBack: () => void;
+  onNavigateToAccount: () => void;
 }
 
 /**
@@ -11,12 +12,12 @@ interface SettingsScreenProps {
  * Features neumorphism styling and menu structure
  * Follows project requirements for component structure
  */
-export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onNavigateBack }) => {
+export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onNavigateBack, onNavigateToAccount }) => {
   const { theme } = useTheme();
 
   // Settings menu items based on the Figma design
   const settingsItems = [
-    { id: 'account', title: 'My account', onPress: () => console.log('My account pressed') },
+    { id: 'account', title: 'My account', onPress: onNavigateToAccount },
     { id: 'points', title: 'Point tally', onPress: () => console.log('Point tally pressed') },
     { id: 'bug', title: 'Report a bug', onPress: () => console.log('Report a bug pressed') },
     { id: 'review', title: 'Leave a review', onPress: () => console.log('Leave a review pressed') },
