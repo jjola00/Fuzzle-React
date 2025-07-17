@@ -46,6 +46,15 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
   const [tempChildInfo, setTempChildInfo] = useState<ChildInfo>(childInfo);
   const [tempParentInfo, setTempParentInfo] = useState<ParentInfo>(parentInfo);
 
+  // Error states
+  const [errors, setErrors] = useState<{
+    childName?: string;
+    childDob?: string;
+    parentName?: string;
+    parentEmail?: string;
+    parentPhone?: string;
+  }>({});
+
   const handleBackPress = () => {
     onNavigateBack();
   };
@@ -56,13 +65,45 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
     return datePattern.test(text);
   };
 
+  const validateEmail = (email: string) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    // Allow numbers, spaces, dashes, parentheses, and plus signs
+    const phonePattern = /^[\d\s\-\(\)\+]+$/;
+    return phonePattern.test(phone) && phone.trim().length >= 6;
+  };
+
+  const validateName = (name: string) => {
+    return name.trim().length >= 2;
+  };
+
+  const clearErrors = () => {
+    setErrors({});
+  };
+
   const handleEditChild = () => {
     if (isEditingChild) {
-      // Validate date format before saving
+      clearErrors();
+      const newErrors: any = {};
+
+      // Validate child name
+      if (!validateName(tempChildInfo.name)) {
+        newErrors.childName = 'Name must be at least 2 characters long';
+      }
+
+      // Validate date format
       if (tempChildInfo.dob && !validateDate(tempChildInfo.dob)) {
-        Alert.alert('Invalid Date', 'Please enter date in DD/MM/YY format');
+        newErrors.childDob = 'Please enter date in DD/MM/YY format';
+      }
+
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
         return;
       }
+
       // Save changes
       setChildInfo(tempChildInfo);
       setIsEditingChild(false);
@@ -71,11 +112,35 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
       // Enter edit mode
       setTempChildInfo(childInfo);
       setIsEditingChild(true);
+      clearErrors();
     }
   };
 
   const handleEditParent = () => {
     if (isEditingParent) {
+      clearErrors();
+      const newErrors: any = {};
+
+      // Validate parent name
+      if (!validateName(tempParentInfo.name)) {
+        newErrors.parentName = 'Name must be at least 2 characters long';
+      }
+
+      // Validate email
+      if (!validateEmail(tempParentInfo.email)) {
+        newErrors.parentEmail = 'Please enter a valid email address';
+      }
+
+      // Validate phone
+      if (!validatePhone(tempParentInfo.phone)) {
+        newErrors.parentPhone = 'Please enter a valid phone number';
+      }
+
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+
       // Save changes
       setParentInfo(tempParentInfo);
       setIsEditingParent(false);
@@ -84,10 +149,12 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
       // Enter edit mode
       setTempParentInfo(parentInfo);
       setIsEditingParent(true);
+      clearErrors();
     }
   };
 
   const handleCancelEdit = (type: 'child' | 'parent') => {
+    clearErrors();
     if (type === 'child') {
       setTempChildInfo(childInfo);
       setIsEditingChild(false);
@@ -100,6 +167,10 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
   const handleDateChange = (text: string) => {
     // Allow user to type freely but validate on save
     setTempChildInfo({...tempChildInfo, dob: text});
+    // Clear error when user starts typing
+    if (errors.childDob) {
+      setErrors({...errors, childDob: undefined});
+    }
   };
 
   const styles = StyleSheet.create({
@@ -223,7 +294,6 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
     infoRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginBottom: 12,
     },
     infoLabel: {
       fontSize: 16,
@@ -247,11 +317,31 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
       color: '#000000',
       fontFamily: 'MavenPro-Regular',
       flex: 1,
+      maxWidth: 200, // Limit width to prevent overlap with cat2.png
       backgroundColor: '#FFFFFF',
       padding: 8,
       borderRadius: 8,
       borderWidth: 1,
       borderColor: '#E0E0E0',
+    },
+    textInputError: {
+      borderColor: '#E53E3E',
+      borderWidth: 2,
+    },
+    errorMessage: {
+      fontSize: 12,
+      color: '#E53E3E',
+      fontFamily: 'MavenPro-Medium',
+      marginTop: 4,
+      marginLeft: 80,
+      maxWidth: 200,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      backgroundColor: '#F0F0F3',
+      borderRadius: 6,
+      borderWidth: 1,
+      borderColor: '#E53E3E',
+      overflow: 'hidden',
     },
     childCatImage: {
       position: 'absolute',
@@ -272,6 +362,11 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
       alignItems: 'center',
     },
   });
+
+  const renderErrorMessage = (error: string | undefined) => {
+    if (!error) return null;
+    return <Text style={styles.errorMessage}>{error}</Text>;
+  };
 
   return (
     <View style={styles.container}>
@@ -329,21 +424,27 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
             <Text style={styles.infoLabel}>Name:</Text>
             {isEditingChild ? (
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, errors.childName && styles.textInputError]}
                 value={tempChildInfo.name}
-                onChangeText={(text) => setTempChildInfo({...tempChildInfo, name: text})}
+                onChangeText={(text) => {
+                  setTempChildInfo({...tempChildInfo, name: text});
+                  if (errors.childName) {
+                    setErrors({...errors, childName: undefined});
+                  }
+                }}
                 placeholder="Enter child's name"
               />
             ) : (
               <Text style={styles.infoValue}>{childInfo.name}</Text>
             )}
           </View>
+          {renderErrorMessage(errors.childName)}
           
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>DOB:</Text>
             {isEditingChild ? (
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, errors.childDob && styles.textInputError]}
                 value={tempChildInfo.dob}
                 onChangeText={handleDateChange}
                 placeholder="DD/MM/YY"
@@ -353,6 +454,7 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
               <Text style={styles.infoValue}>{childInfo.dob}</Text>
             )}
           </View>
+          {renderErrorMessage(errors.childDob)}
           
           <Image
             source={require('../../assets/cat1.png')}
@@ -393,23 +495,34 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
             <Text style={styles.infoLabel}>Name:</Text>
             {isEditingParent ? (
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, errors.parentName && styles.textInputError]}
                 value={tempParentInfo.name}
-                onChangeText={(text) => setTempParentInfo({...tempParentInfo, name: text})}
+                onChangeText={(text) => {
+                  setTempParentInfo({...tempParentInfo, name: text});
+                  if (errors.parentName) {
+                    setErrors({...errors, parentName: undefined});
+                  }
+                }}
                 placeholder="Enter parent's name"
               />
             ) : (
               <Text style={styles.infoValue}>{parentInfo.name}</Text>
             )}
           </View>
+          {renderErrorMessage(errors.parentName)}
           
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Email:</Text>
             {isEditingParent ? (
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, errors.parentEmail && styles.textInputError]}
                 value={tempParentInfo.email}
-                onChangeText={(text) => setTempParentInfo({...tempParentInfo, email: text})}
+                onChangeText={(text) => {
+                  setTempParentInfo({...tempParentInfo, email: text});
+                  if (errors.parentEmail) {
+                    setErrors({...errors, parentEmail: undefined});
+                  }
+                }}
                 placeholder="Enter email address"
                 keyboardType="email-address"
               />
@@ -417,14 +530,20 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
               <Text style={styles.infoValue}>{parentInfo.email}</Text>
             )}
           </View>
+          {renderErrorMessage(errors.parentEmail)}
           
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Phone:</Text>
             {isEditingParent ? (
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, errors.parentPhone && styles.textInputError]}
                 value={tempParentInfo.phone}
-                onChangeText={(text) => setTempParentInfo({...tempParentInfo, phone: text})}
+                onChangeText={(text) => {
+                  setTempParentInfo({...tempParentInfo, phone: text});
+                  if (errors.parentPhone) {
+                    setErrors({...errors, parentPhone: undefined});
+                  }
+                }}
                 placeholder="Enter phone number"
                 keyboardType="phone-pad"
               />
@@ -432,6 +551,7 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({ on
               <Text style={styles.infoValue}>{parentInfo.phone}</Text>
             )}
           </View>
+          {renderErrorMessage(errors.parentPhone)}
           
           <Image
             source={require('../../assets/cat2.png')}
