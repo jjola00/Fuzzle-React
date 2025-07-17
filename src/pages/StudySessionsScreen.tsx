@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar, Platform } from "react-native";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAsyncState } from "@/hooks/useAsyncState";
 import { databaseService, SessionData } from "@/services";
 import { Button } from "@/components";
-// import { seedSampleData } from "@/services/seedData"; // Uncomment to test with sample data
 
 // Props interface for StudySessionsScreen
 interface StudySessionsScreenProps {
@@ -12,7 +11,7 @@ interface StudySessionsScreenProps {
 }
 
 /**
- * StudySessionsScreen component displays past study sessions
+ * StudySessionsScreen component displays past study sessions with pagination
  * Shows session duration, breaks taken, and whether sessions ended early
  * Follows the design provided in the mockup with neomorphism styling
  */
@@ -21,26 +20,44 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
 }) => {
   const { theme } = useTheme();
   const { state: sessionsState, execute: fetchSessions } = useAsyncState<SessionData[]>();
+  const [allSessions, setAllSessions] = useState<SessionData[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasMorePages, setHasMorePages] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  // Fetch sessions on component mount
+  const ITEMS_PER_PAGE = 5;
+
+  // Fetch initial sessions on component mount
   useEffect(() => {
-    fetchSessions(async () => {
-      try {
-        const sessions = await databaseService.getSessions();
-        
-        // Uncomment the lines below to add sample data if database is empty
-        // if (sessions.length === 0) {
-        //   await seedSampleData();
-        //   return await databaseService.getSessions();
-        // }
-        
-        return sessions;
-      } catch (error) {
-        console.error('Failed to fetch sessions:', error);
-        throw error;
-      }
-    });
+    loadSessions(0, true);
   }, []);
+
+  // Load sessions with pagination
+  const loadSessions = async (page: number, isInitialLoad: boolean = false) => {
+    const offset = page * ITEMS_PER_PAGE;
+    
+    if (isInitialLoad) {
+      fetchSessions(async () => {
+        const sessions = await databaseService.getSessions(undefined, offset, ITEMS_PER_PAGE);
+        setAllSessions(sessions);
+        setCurrentPage(0);
+        setHasMorePages(sessions.length === ITEMS_PER_PAGE);
+        return sessions;
+      });
+    } else {
+      setIsLoadingMore(true);
+      try {
+        const newSessions = await databaseService.getSessions(undefined, offset, ITEMS_PER_PAGE);
+        setAllSessions(prev => [...prev, ...newSessions]);
+        setCurrentPage(page);
+        setHasMorePages(newSessions.length === ITEMS_PER_PAGE);
+      } catch (error) {
+        console.error('Error loading more sessions:', error);
+      } finally {
+        setIsLoadingMore(false);
+      }
+    }
+  };
 
   // Handle back button press
   const handleBackPress = () => {
@@ -49,9 +66,17 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
 
   // Handle retry loading sessions
   const handleRetry = () => {
-    fetchSessions(async () => {
-      return await databaseService.getSessions();
-    });
+    setAllSessions([]);
+    setCurrentPage(0);
+    setHasMorePages(true);
+    loadSessions(0, true);
+  };
+
+  // Handle next page
+  const handleNextPage = () => {
+    if (hasMorePages && !isLoadingMore) {
+      loadSessions(currentPage + 1);
+    }
   };
 
   // Render individual session item
@@ -77,10 +102,31 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
         No study sessions found
       </Text>
       <Text style={styles.emptySubText} selectable={false}>
-        Start studying to see your session history here
+        Start studying to see your recent sessions here
       </Text>
     </View>
   );
+
+  // Render next page button
+  const renderNextPageButton = () => {
+    if (!hasMorePages || allSessions.length === 0) return null;
+
+    return (
+      <TouchableOpacity
+        style={styles.nextPageButton}
+        onPress={handleNextPage}
+        disabled={isLoadingMore}
+        activeOpacity={0.8}
+        accessible={true}
+        accessibilityRole="button"
+        accessibilityLabel="Load more sessions"
+      >
+        <Text style={styles.nextPageButtonText} selectable={false}>
+          {isLoadingMore ? "Loading..." : "Next Page"}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -145,7 +191,7 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
       // Web requires boxShadow instead of individual shadow properties
       boxShadow:
         Platform.OS === "web"
-          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF"
+          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3)"
           : undefined,
       // Fallback shadows for native platforms
       shadowColor: Platform.OS !== "web" ? "#000" : undefined,
@@ -164,13 +210,40 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
     },
     sessionDuration: {
       fontSize: 22,
-      fontWeight: "400",
+      fontWeight: "500",
       color: "#000000",
-      fontFamily: "MavenPro-SemiBold",
+      fontFamily: "MavenPro-Medium",
       userSelect: "none",
     },
     sessionBreaks: {
       fontSize: 16,
+      fontWeight: "500",
+      color: "#000000",
+      fontFamily: "MavenPro-Medium",
+      userSelect: "none",
+    },
+    nextPageButton: {
+      height: 50,
+      backgroundColor: "#F0F0F3",
+      borderRadius: 15,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 20,
+      marginBottom: 20,
+      // Web requires boxShadow instead of individual shadow properties
+      boxShadow:
+        Platform.OS === "web"
+          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF"
+          : undefined,
+      // Fallback shadows for native platforms
+      shadowColor: Platform.OS !== "web" ? "#000" : undefined,
+      shadowOffset: Platform.OS !== "web" ? { width: 0, height: 2 } : undefined,
+      shadowOpacity: Platform.OS !== "web" ? 0.1 : undefined,
+      shadowRadius: Platform.OS !== "web" ? 4 : undefined,
+      elevation: Platform.OS === "android" ? 3 : 0,
+    },
+    nextPageButtonText: {
+      fontSize: 18,
       fontWeight: "500",
       color: "#000000",
       fontFamily: "MavenPro-Medium",
@@ -280,9 +353,12 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
           renderEmptyState()
         )}
 
-        {sessionsState.data && sessionsState.data.length > 0 && 
-          sessionsState.data.map(renderSessionItem)
-        }
+        {allSessions.length > 0 && (
+          <>
+            {allSessions.map(renderSessionItem)}
+            {renderNextPageButton()}
+          </>
+        )}
       </ScrollView>
     </View>
   );

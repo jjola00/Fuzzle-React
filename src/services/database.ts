@@ -17,16 +17,19 @@ export interface DatabaseError {
  */
 class DatabaseService {
   /**
-   * Fetch all sessions for a user
-   * @param userId - The user ID to fetch sessions for (optional, defaults to a test user)
+   * Fetch sessions with pagination support
+   * @param userId - The user ID to fetch sessions for (optional)
+   * @param offset - Number of records to skip (for pagination)
+   * @param limit - Maximum number of records to return
    * @returns Promise<SessionData[]> - Array of session data
    */
-  async getSessions(userId?: string): Promise<SessionData[]> {
+  async getSessions(userId?: string, offset: number = 0, limit: number = 5): Promise<SessionData[]> {
     try {
       const { data, error } = await supabase
         .from('sessions')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
 
       if (error) {
         throw new Error(`Failed to fetch sessions: ${error.message}`);
