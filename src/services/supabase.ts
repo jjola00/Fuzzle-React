@@ -1,16 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Supabase configuration from environment variables
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl: string | undefined = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey: string | undefined = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
 // Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables. Please check your .env file.');
 }
 
+// At this point, supabaseUrl and supabaseAnonKey are guaranteed to be non-null
+const validatedSupabaseUrl = supabaseUrl!;
+const validatedSupabaseAnonKey = supabaseAnonKey!;
+
 // Create and export the Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(validatedSupabaseUrl, validatedSupabaseAnonKey);
 
 // Database types matching the schema
 export interface User {
