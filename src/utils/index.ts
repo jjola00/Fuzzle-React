@@ -29,7 +29,7 @@ export const formatCurrency = (
  * Debounce function to limit the rate of function calls
  * Useful for search inputs and other high-frequency events
  */
-export const debounce = <T extends (...args: any[]) => void>(
+export const debounce = <T extends (...args: unknown[]) => void>(
   func: T,
   delay: number,
 ): ((...args: Parameters<T>) => void) => {

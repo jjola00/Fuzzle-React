@@ -35,11 +35,11 @@ export class ErrorBoundary extends Component<
   }
 
   /**
-   * Lifecycle method called when an error occurs
-   * Used for error reporting and logging
+   * Logs error information and performs additional error handling
    */
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error to console in development
+    // eslint-disable-next-line no-console
     console.error("ErrorBoundary caught an error:", error, errorInfo);
 
     // TODO: Report error to error tracking service in production

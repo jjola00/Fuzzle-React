@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import * as Font from 'expo-font';
+import * as Font from "expo-font";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import { Button, ErrorBoundary } from "@/components";
-import { HomeScreen, LoadingScreen, SettingsScreen, AccountSettingsScreen } from "@/pages";
+import {
+  HomeScreen,
+  LoadingScreen,
+  SettingsScreen,
+  AccountSettingsScreen,
+} from "@/pages";
 
 // Define screen types for navigation
 type ScreenType = "loading" | "home" | "settings" | "account";
@@ -22,12 +27,12 @@ const AppContent: React.FC = () => {
   // Load fonts on component mount
   useEffect(() => {
     Font.loadAsync({
-      'MavenPro-Regular': require('../assets/fonts/MavenPro-Regular.ttf'),
-      'MavenPro-Medium': require('../assets/fonts/MavenPro-Medium.ttf'),
-      'MavenPro-SemiBold': require('../assets/fonts/MavenPro-SemiBold.ttf'),
-      'MavenPro-Bold': require('../assets/fonts/MavenPro-Bold.ttf'),
-      'MavenPro-ExtraBold': require('../assets/fonts/MavenPro-ExtraBold.ttf'),
-      'MavenPro-Black': require('../assets/fonts/MavenPro-Black.ttf'),
+      "MavenPro-Regular": require("../assets/fonts/MavenPro-Regular.ttf"),
+      "MavenPro-Medium": require("../assets/fonts/MavenPro-Medium.ttf"),
+      "MavenPro-SemiBold": require("../assets/fonts/MavenPro-SemiBold.ttf"),
+      "MavenPro-Bold": require("../assets/fonts/MavenPro-Bold.ttf"),
+      "MavenPro-ExtraBold": require("../assets/fonts/MavenPro-ExtraBold.ttf"),
+      "MavenPro-Black": require("../assets/fonts/MavenPro-Black.ttf"),
     }).then(() => setFontsLoaded(true));
   }, []);
 
@@ -73,13 +78,15 @@ const AppContent: React.FC = () => {
         <HomeScreen onNavigateToSettings={() => navigateToScreen("settings")} />
       )}
       {currentScreen === "settings" && (
-        <SettingsScreen 
+        <SettingsScreen
           onNavigateBack={() => navigateToScreen("home")}
           onNavigateToAccount={() => navigateToScreen("account")}
         />
       )}
       {currentScreen === "account" && (
-        <AccountSettingsScreen onNavigateBack={() => navigateToScreen("settings")} />
+        <AccountSettingsScreen
+          onNavigateBack={() => navigateToScreen("settings")}
+        />
       )}
     </View>
   );
