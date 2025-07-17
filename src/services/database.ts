@@ -136,16 +136,18 @@ class DatabaseService {
    */
   async deleteSession(sessionId: string): Promise<boolean> {
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('sessions')
         .delete()
-        .eq('id', sessionId);
+        .eq('id', sessionId)
+        .select();
 
       if (error) {
         throw new Error(`Failed to delete session: ${error.message}`);
       }
 
-      return true;
+      // Check if any rows were deleted
+      return data && data.length > 0;
     } catch (error) {
       console.error('Error deleting session:', error);
       return false;
