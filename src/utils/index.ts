@@ -29,10 +29,10 @@ export const formatCurrency = (
  * Utility function to debounce function calls
  * Prevents excessive function calls during rapid user input
  */
-export const debounce = <T extends (...args: any[]) => void>(
+export const debounce = <T extends (..._args: unknown[]) => void>(
   func: T,
   delay: number
-): ((...args: Parameters<T>) => void) => {
+): ((..._args: Parameters<T>) => void) => {
   let timeoutId: NodeJS.Timeout;
 
   return (...args: Parameters<T>) => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar, Platform } from 'react-native';
-import { useTheme } from '@/contexts/ThemeContext';
+// Remove unused theme import
+// import { useTheme } from '@/contexts/ThemeContext';
 
 interface SettingsScreenProps {
   onNavigateBack: () => void;
@@ -12,7 +13,8 @@ interface SettingsScreenProps {
  * Follows project requirements for component structure
  */
 export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onNavigateBack }) => {
-  const { theme } = useTheme();
+  // Remove unused theme variable
+  // const { theme } = useTheme();
 
   // Settings menu items based on the Figma design
   const settingsItems = [
@@ -107,12 +109,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onNavigateBack }
       textAlign: 'center',
       fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
       userSelect: 'none',
-    },
-    menuItemPressed: {
-      // Pressed state uses inset shadow for neumorphism effect
-      boxShadow: Platform.OS === 'web' 
-        ? 'inset 2px 2px 4px rgba(174, 174, 192, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.3)' 
-        : undefined,
     },
   });
 
