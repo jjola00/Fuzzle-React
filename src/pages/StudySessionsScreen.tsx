@@ -122,7 +122,7 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
         accessibilityLabel="Load more sessions"
       >
         <Text style={styles.nextPageButtonText} selectable={false}>
-          {isLoadingMore ? "Loading..." : "Next Page"}
+          {isLoadingMore ? "Loading..." : "Load More"}
         </Text>
       </TouchableOpacity>
     );
