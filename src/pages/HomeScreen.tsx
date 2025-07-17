@@ -21,7 +21,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const { state, execute } = useAsyncState<string>();
 
   // Debug log to ensure component is rendering
-  // eslint-disable-next-line no-console
+
   if (__DEV__) {
     console.log("HomeScreen rendering with theme:", theme);
   }

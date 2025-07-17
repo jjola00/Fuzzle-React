@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -48,57 +48,64 @@ export const Button: React.FC<ButtonProps> = ({
    * Keeps styles derived from props and theme state
    */
   const getButtonStyles = useMemo(() => {
-    const baseStyle = {
-      borderRadius: theme.borderRadius.md,
-      justifyContent: "center" as const,
-      alignItems: "center" as const,
-      flexDirection: "row" as const,
+    return () => {
+      const baseStyle = {
+        borderRadius: theme.borderRadius.md,
+        justifyContent: "center" as const,
+        alignItems: "center" as const,
+        flexDirection: "row" as const,
+      };
+
+      const sizeStyles = {
+        small: {
+          paddingHorizontal: theme.spacing.sm,
+          paddingVertical: theme.spacing.xs,
+          minHeight: 32,
+        },
+        medium: {
+          paddingHorizontal: theme.spacing.md,
+          paddingVertical: theme.spacing.sm,
+          minHeight: 44,
+        },
+        large: {
+          paddingHorizontal: theme.spacing.lg,
+          paddingVertical: theme.spacing.md,
+          minHeight: 52,
+        },
+      };
+
+      const variantStyles = {
+        primary: {
+          backgroundColor: theme.colors.primary,
+        },
+        secondary: {
+          backgroundColor: theme.colors.secondary,
+        },
+        outline: {
+          backgroundColor: "transparent",
+          borderWidth: 1,
+          borderColor: theme.colors.primary,
+        },
+        text: {
+          backgroundColor: "transparent",
+        },
+      };
+
+      const disabledStyle =
+        disabled || loading
+          ? {
+              opacity: 0.5,
+            }
+          : {};
+
+      return [
+        baseStyle,
+        sizeStyles[size],
+        variantStyles[variant],
+        disabledStyle,
+      ];
     };
-
-    const sizeStyles = {
-      small: {
-        paddingHorizontal: theme.spacing.sm,
-        paddingVertical: theme.spacing.xs,
-        minHeight: 32,
-      },
-      medium: {
-        paddingHorizontal: theme.spacing.md,
-        paddingVertical: theme.spacing.sm,
-        minHeight: 44,
-      },
-      large: {
-        paddingHorizontal: theme.spacing.lg,
-        paddingVertical: theme.spacing.md,
-        minHeight: 52,
-      },
-    };
-
-    const variantStyles = {
-      primary: {
-        backgroundColor: theme.colors.primary,
-      },
-      secondary: {
-        backgroundColor: theme.colors.secondary,
-      },
-      outline: {
-        backgroundColor: "transparent",
-        borderWidth: 1,
-        borderColor: theme.colors.primary,
-      },
-      text: {
-        backgroundColor: "transparent",
-      },
-    };
-
-    const disabledStyle =
-      disabled || loading
-        ? {
-            opacity: 0.5,
-          }
-        : {};
-
-    return [baseStyle, sizeStyles[size], variantStyles[variant], disabledStyle];
-  };
+  }, [theme, size, variant, disabled, loading]);
 
   /**
    * Generates text styles based on variant and theme
