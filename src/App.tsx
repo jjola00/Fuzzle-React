@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import * as Font from 'expo-font';
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import { Button, ErrorBoundary } from "@/components";
 import { HomeScreen, LoadingScreen, SettingsScreen } from "@/pages";
@@ -16,12 +17,25 @@ type ScreenType = "loading" | "home" | "settings";
 const AppContent: React.FC = () => {
   const { theme, isDarkMode } = useTheme();
   const [currentScreen, setCurrentScreen] = useState<ScreenType>("loading");
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  // Load fonts on component mount
+  useEffect(() => {
+    Font.loadAsync({
+      'MavenPro-Regular': require('../assets/fonts/MavenPro-Regular.ttf'),
+      'MavenPro-Medium': require('../assets/fonts/MavenPro-Medium.ttf'),
+      'MavenPro-SemiBold': require('../assets/fonts/MavenPro-SemiBold.ttf'),
+      'MavenPro-Bold': require('../assets/fonts/MavenPro-Bold.ttf'),
+      'MavenPro-ExtraBold': require('../assets/fonts/MavenPro-ExtraBold.ttf'),
+      'MavenPro-Black': require('../assets/fonts/MavenPro-Black.ttf'),
+    }).then(() => setFontsLoaded(true));
+  }, []);
 
   // Handler to switch screens
   const navigateToScreen = (screen: ScreenType) => setCurrentScreen(screen);
 
-  // Safety check to ensure theme is loaded before rendering
-  if (!theme) {
+  // Safety check to ensure theme and fonts are loaded before rendering
+  if (!theme || !fontsLoaded) {
     return null;
   }
 

@@ -1,52 +1,27 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  StatusBar,
-  Platform,
-} from "react-native";
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar, Platform } from 'react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface SettingsScreenProps {
   onNavigateBack: () => void;
 }
 
 /**
- * SettingsScreen component implementing the exact Figma design
- * Features neumorphism styling and exact menu structure from design
- * Uses Maven Pro font and specific measurements from Figma
+ * SettingsScreen component implementing the Figma design
+ * Features neumorphism styling and menu structure
+ * Follows project requirements for component structure
  */
-export const SettingsScreen: React.FC<SettingsScreenProps> = ({
-  onNavigateBack,
-}) => {
-  // Menu items matching the exact Figma design
+export const SettingsScreen: React.FC<SettingsScreenProps> = ({ onNavigateBack }) => {
+  const { theme } = useTheme();
+
+  // Settings menu items based on the Figma design
   const settingsItems = [
-    {
-      title: "My account",
-      action: () => console.log("My account pressed"),
-    },
-    {
-      title: "Point tally",
-      action: () => console.log("Point tally pressed"),
-    },
-    {
-      title: "Report a bug",
-      action: () => console.log("Report a bug pressed"),
-    },
-    {
-      title: "Leave a review",
-      action: () => console.log("Leave a review pressed"),
-    },
-    {
-      title: "Privacy policy",
-      action: () => console.log("Privacy policy pressed"),
-    },
-    {
-      title: "Terms of service",
-      action: () => console.log("Terms of service pressed"),
-    },
+    { id: 'account', title: 'My account', onPress: () => console.log('My account pressed') },
+    { id: 'points', title: 'Point tally', onPress: () => console.log('Point tally pressed') },
+    { id: 'bug', title: 'Report a bug', onPress: () => console.log('Report a bug pressed') },
+    { id: 'review', title: 'Leave a review', onPress: () => console.log('Leave a review pressed') },
+    { id: 'privacy', title: 'Privacy policy', onPress: () => console.log('Privacy policy pressed') },
+    { id: 'terms', title: 'Terms of service', onPress: () => console.log('Terms of service pressed') },
   ];
 
   const handleBackPress = () => {
@@ -56,114 +31,97 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: "#F0F0F3",
-      width: 375,
-      height: 812,
-      position: "relative",
+      backgroundColor: '#F0F0F3',
     },
     header: {
-      flexDirection: "row",
-      alignItems: "center",
+      flexDirection: 'row',
+      alignItems: 'center',
       paddingHorizontal: 21,
-      paddingTop: 58,
+      paddingTop: Platform.OS === 'ios' ? 58 : 20,
       paddingBottom: 20,
-      backgroundColor: "#F0F0F3",
+      backgroundColor: '#F0F0F3',
     },
     backButton: {
       width: 40,
       height: 40,
-      backgroundColor: "#F0F0F3",
       borderRadius: 20,
-      justifyContent: "center",
-      alignItems: "center",
-      marginRight: 16,
-      ...(Platform.OS !== "web" && {
-        shadowColor: "#FFFFFF",
-        shadowOffset: { width: -5, height: -5 },
-        shadowOpacity: 1,
-        shadowRadius: 10,
-        elevation: 5,
-      }),
-      // Additional shadow for neumorphic effect
-      ...(Platform.OS !== "web" && {
-        shadowColor: "rgba(174, 174, 192, 0.3)",
-        shadowOffset: { width: 5, height: 5 },
-        shadowOpacity: 1,
-        shadowRadius: 10,
-      }),
+      backgroundColor: '#F0F0F3',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 10,
+      position: 'relative',
+      // Web requires boxShadow instead of individual shadow properties
+      boxShadow: Platform.OS === 'web' 
+        ? '-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3)' 
+        : undefined,
+      // Fallback shadows for native platforms
+      shadowColor: Platform.OS !== 'web' ? '#000' : undefined,
+      shadowOffset: Platform.OS !== 'web' ? { width: 0, height: 2 } : undefined,
+      shadowOpacity: Platform.OS !== 'web' ? 0.1 : undefined,
+      shadowRadius: Platform.OS !== 'web' ? 4 : undefined,
+      elevation: Platform.OS === 'android' ? 3 : 0,
     },
     backButtonText: {
-      fontSize: 18,
-      fontWeight: "bold",
-      color: "#A3ADB2",
+      fontSize: 20,
+      color: '#A3ADB2',
+      fontWeight: '400',
+      lineHeight: 24,
+      userSelect: 'none',
     },
-    headerTitle: {
+    title: {
       fontSize: 28,
-      fontWeight: "600",
-      color: "#000000",
-      fontFamily: Platform.OS === "ios" ? "Maven Pro" : "Maven Pro",
-      lineHeight: 13,
-      textAlign: "center",
+      fontWeight: '600',
+      color: '#000000',
+      textAlign: 'center',
       flex: 1,
-      marginRight: 56, // Compensate for back button width
+      marginLeft: -40, // Compensate for back button to center the title
+      fontFamily: 'MavenPro-SemiBold',
+      userSelect: 'none',
     },
     content: {
-      flex: 1,
-      paddingHorizontal: 27,
+      paddingHorizontal: 29,
       paddingTop: 20,
     },
     menuItem: {
-      width: 321,
       height: 80,
-      backgroundColor: "#F0F0F3",
-      marginBottom: 15,
       borderRadius: 20,
-      justifyContent: "center",
-      alignItems: "center",
-      alignSelf: "center",
-      // Neumorphic shadow effect from Figma
-      ...(Platform.OS !== "web" && {
-        shadowColor: "#FFFFFF",
-        shadowOffset: { width: -5, height: -5 },
-        shadowOpacity: 1,
-        shadowRadius: 10,
-        elevation: 5,
-      }),
-      // Secondary shadow for depth
-      ...(Platform.OS === "android" && {
-        elevation: 10,
-      }),
+      backgroundColor: '#F0F0F3',
+      marginBottom: 15,
+      justifyContent: 'center',
+      alignItems: 'center',
+      // Web requires boxShadow instead of individual shadow properties
+      boxShadow: Platform.OS === 'web' 
+        ? '-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3)' 
+        : undefined,
+      // Fallback shadows for native platforms
+      shadowColor: Platform.OS !== 'web' ? '#000' : undefined,
+      shadowOffset: Platform.OS !== 'web' ? { width: 0, height: 2 } : undefined,
+      shadowOpacity: Platform.OS !== 'web' ? 0.1 : undefined,
+      shadowRadius: Platform.OS !== 'web' ? 4 : undefined,
+      elevation: Platform.OS === 'android' ? 3 : 0,
     },
     menuItemText: {
       fontSize: 20,
-      fontWeight: "500",
-      color: "#000000",
-      fontFamily: Platform.OS === "ios" ? "Maven Pro" : "Maven Pro",
-      lineHeight: 24,
-      textAlign: "center",
+      fontWeight: '500',
+      color: '#000000',
+      textAlign: 'center',
+      fontFamily: 'MavenPro-Medium',
+      userSelect: 'none',
     },
-    // Individual positioning for web shadow effects
-    menuItemShadow: {
-      ...(Platform.OS === "web" && {
-        boxShadow: "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF",
-      }),
-    },
-    backButtonShadow: {
-      ...(Platform.OS === "web" && {
-        boxShadow: "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF",
-      }),
+    menuItemPressed: {
+      // Pressed state uses inset shadow for neumorphism effect
+      boxShadow: Platform.OS === 'web' 
+        ? 'inset 2px 2px 4px rgba(174, 174, 192, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.3)' 
+        : undefined,
     },
   });
 
-  const renderMenuItem = (item: (typeof settingsItems)[0], index: number) => (
+  const renderMenuItem = (item: typeof settingsItems[0]) => (
     <TouchableOpacity
-      key={`${item.title}-${index}`}
-      style={[styles.menuItem, styles.menuItemShadow]}
-      onPress={item.action}
+      key={item.id}
+      style={[styles.menuItem]}
+      onPress={item.onPress}
       activeOpacity={0.95}
-      accessible={true}
-      accessibilityRole="button"
-      accessibilityLabel={`${item.title} settings option`}
     >
       <Text style={styles.menuItemText} selectable={false}>
         {item.title}
@@ -174,27 +132,23 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#F0F0F3" />
-
+      
       <View style={styles.header}>
-        <TouchableOpacity
-          style={[styles.backButton, styles.backButtonShadow]}
+        <TouchableOpacity 
+          style={styles.backButton}
           onPress={handleBackPress}
           activeOpacity={0.8}
           accessible={true}
           accessibilityRole="button"
-          accessibilityLabel="Go back to previous screen"
+          accessibilityLabel="Go back to home screen"
         >
-          <Text style={styles.backButtonText} selectable={false}>
-            ‹
-          </Text>
+          <Text style={styles.backButtonText} selectable={false}>‹</Text>
         </TouchableOpacity>
-
-        <Text style={styles.headerTitle} selectable={false}>
-          Settings
-        </Text>
+        
+        <Text style={styles.title} selectable={false}>Settings</Text>
       </View>
 
-      <ScrollView
+      <ScrollView 
         style={styles.content}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 40 }}
@@ -203,4 +157,4 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       </ScrollView>
     </View>
   );
-};
+}; 
