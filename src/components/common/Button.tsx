@@ -47,7 +47,7 @@ export const Button: React.FC<ButtonProps> = ({
    * Generates button styles based on variant and theme
    * Keeps styles derived from props and theme state
    */
-  const getButtonStyles = () => {
+  const getButtonStyles = useMemo(() => {
     const baseStyle = {
       borderRadius: theme.borderRadius.md,
       justifyContent: "center" as const,
