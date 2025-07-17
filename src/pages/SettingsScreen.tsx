@@ -91,7 +91,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       // Web requires boxShadow instead of individual shadow properties
       boxShadow:
         Platform.OS === "web"
-          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3)"
+          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF"
           : undefined,
       // Fallback shadows for native platforms
       shadowColor: Platform.OS !== "web" ? "#000" : undefined,
@@ -109,7 +109,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     },
     title: {
       fontSize: 28,
-      fontWeight: "600",
+      fontWeight: "400",
       color: "#000000",
       textAlign: "center",
       flex: 1,
@@ -131,7 +131,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       // Web requires boxShadow instead of individual shadow properties
       boxShadow:
         Platform.OS === "web"
-          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3)"
+          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF"
           : undefined,
       // Fallback shadows for native platforms
       shadowColor: Platform.OS !== "web" ? "#000" : undefined,
@@ -142,7 +142,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     },
     menuItemText: {
       fontSize: 20,
-      fontWeight: "500",
+      fontWeight: "400",
       color: "#000000",
       textAlign: "center",
       fontFamily: "MavenPro-Medium",

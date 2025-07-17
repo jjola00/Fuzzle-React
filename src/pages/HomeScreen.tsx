@@ -7,6 +7,7 @@ import { Button } from "@/components";
 // Props interface for HomeScreen
 interface HomeScreenProps {
   onNavigateToSettings: () => void;
+  onNavigateToSessions: () => void;
 }
 
 /**
@@ -16,6 +17,7 @@ interface HomeScreenProps {
  */
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateToSettings,
+  onNavigateToSessions,
 }) => {
   const { theme } = useTheme();
   const { state, execute } = useAsyncState<string>();
@@ -146,6 +148,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             onPress={onNavigateToSettings}
             testID="settings-button"
           />
+          <View style={{ marginTop: theme.spacing.sm }}>
+            <Button
+              title="View past sessions"
+              variant="primary"
+              onPress={onNavigateToSessions}
+              testID="sessions-button"
+            />
+          </View>
         </View>
       </View>
     </ScrollView>

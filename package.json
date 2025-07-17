@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",
+    "@supabase/supabase-js": "^2.52.0",
     "expo": "~53.0.17",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@testing-library/react-native": "^12.4.3",
     "@types/jest": "^29.5.8",
     "@types/react": "~19.0.10",
     "@types/react-test-renderer": "^18.0.7",
@@ -53,8 +55,7 @@
     "jest-fetch-mock": "^3.0.3",
     "prettier": "^3.6.2",
     "react-test-renderer": "19.0.0",
-    "typescript": "~5.8.3",
-    "@testing-library/react-native": "^12.4.3"
+    "typescript": "~5.8.3"
   },
   "jest": {
     "preset": "jest-expo",
