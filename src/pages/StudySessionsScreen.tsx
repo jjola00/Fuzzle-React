@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar, Platfo
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAsyncState } from "@/hooks/useAsyncState";
 import { databaseService, SessionData } from "@/services";
+import { Button } from "@/components";
+// import { seedSampleData } from "@/services/seedData"; // Uncomment to test with sample data
 
 // Props interface for StudySessionsScreen
 interface StudySessionsScreenProps {
@@ -23,13 +25,33 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
   // Fetch sessions on component mount
   useEffect(() => {
     fetchSessions(async () => {
-      return await databaseService.getSessions();
+      try {
+        const sessions = await databaseService.getSessions();
+        
+        // Uncomment the lines below to add sample data if database is empty
+        // if (sessions.length === 0) {
+        //   await seedSampleData();
+        //   return await databaseService.getSessions();
+        // }
+        
+        return sessions;
+      } catch (error) {
+        console.error('Failed to fetch sessions:', error);
+        throw error;
+      }
     });
   }, []);
 
   // Handle back button press
   const handleBackPress = () => {
     onNavigateBack();
+  };
+
+  // Handle retry loading sessions
+  const handleRetry = () => {
+    fetchSessions(async () => {
+      return await databaseService.getSessions();
+    });
   };
 
   // Render individual session item
@@ -45,6 +67,18 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
           </Text>
         )}
       </View>
+    </View>
+  );
+
+  // Render empty state
+  const renderEmptyState = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText} selectable={false}>
+        No study sessions found
+      </Text>
+      <Text style={styles.emptySubText} selectable={false}>
+        Start studying to see your session history here
+      </Text>
     </View>
   );
 
@@ -111,7 +145,7 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
       // Web requires boxShadow instead of individual shadow properties
       boxShadow:
         Platform.OS === "web"
-          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3)"
+          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF"
           : undefined,
       // Fallback shadows for native platforms
       shadowColor: Platform.OS !== "web" ? "#000" : undefined,
@@ -146,6 +180,7 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
+      paddingTop: 100,
     },
     loadingText: {
       fontSize: 16,
@@ -166,6 +201,28 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
       textAlign: "center",
       fontFamily: "MavenPro-Medium",
       userSelect: "none",
+      marginBottom: 20,
+    },
+    emptyContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      paddingTop: 100,
+    },
+    emptyText: {
+      fontSize: 18,
+      color: "#677278",
+      fontFamily: "MavenPro-Medium",
+      userSelect: "none",
+      textAlign: "center",
+    },
+    emptySubText: {
+      fontSize: 14,
+      color: "#A3ADB2",
+      fontFamily: "MavenPro-Regular",
+      userSelect: "none",
+      textAlign: "center",
+      marginTop: 8,
     },
   });
 
@@ -210,10 +267,22 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
             <Text style={styles.errorText} selectable={false}>
               Error loading sessions: {sessionsState.error}
             </Text>
+            <Button
+              title="Try Again"
+              variant="primary"
+              onPress={handleRetry}
+              testID="retry-button"
+            />
           </View>
         )}
 
-        {sessionsState.data && sessionsState.data.map(renderSessionItem)}
+        {sessionsState.data && sessionsState.data.length === 0 && (
+          renderEmptyState()
+        )}
+
+        {sessionsState.data && sessionsState.data.length > 0 && 
+          sessionsState.data.map(renderSessionItem)
+        }
       </ScrollView>
     </View>
   );
