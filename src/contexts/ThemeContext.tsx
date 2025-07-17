@@ -4,9 +4,10 @@ import React, {
   useState,
   useCallback,
   ReactNode,
-} from 'react';
-import { Theme } from '@/types';
-import { defaultTheme, darkTheme } from '@/utils/theme';
+  useMemo,
+} from "react";
+import { Theme } from "@/types";
+import { defaultTheme, darkTheme, lightTheme } from "@/utils/theme";
 
 interface ThemeContextType {
   theme: Theme;
@@ -34,40 +35,40 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
   initialTheme = defaultTheme,
 }) => {
-  const [theme, setTheme] = useState<Theme>(initialTheme);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [currentTheme, setCurrentTheme] = useState<Theme>(initialTheme);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   /**
-   * Toggles between light and dark theme
-   * Uses useCallback to prevent unnecessary re-renders
+   * Toggle between light and dark themes
+   * Updates both the theme state and dark mode flag
    */
   const toggleTheme = useCallback(() => {
-    setIsDarkMode((prevMode) => {
-      const newMode = !prevMode;
-      setTheme(newMode ? darkTheme : defaultTheme);
-      return newMode;
+    setIsDarkMode((prev) => {
+      const newDarkMode = !prev;
+      setCurrentTheme(newDarkMode ? darkTheme : lightTheme);
+      return newDarkMode;
     });
   }, []);
 
   /**
-   * Sets a custom theme
-   * Allows for theme customization beyond light/dark modes
+   * Manually set a specific theme
+   * Useful for custom theme configurations
    */
-  const setCustomTheme = useCallback((newTheme: Theme) => {
-    setTheme(newTheme);
-    // Determine if the new theme is dark based on background color
-    const isDark =
-      newTheme.colors.background === '#000000' ||
-      newTheme.colors.background.toLowerCase().includes('dark');
-    setIsDarkMode(isDark);
+  const setTheme = useCallback((theme: Theme) => {
+    setCurrentTheme(theme);
+    // Update dark mode flag based on theme colors
+    setIsDarkMode(theme.colors.background === "#000000");
   }, []);
 
-  const value: ThemeContextType = {
-    theme,
-    isDarkMode,
-    toggleTheme,
-    setTheme: setCustomTheme,
-  };
+  const value = useMemo(
+    () => ({
+      theme: currentTheme,
+      isDarkMode,
+      toggleTheme,
+      setTheme,
+    }),
+    [currentTheme, isDarkMode, toggleTheme, setTheme],
+  );
 
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
@@ -82,7 +83,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };

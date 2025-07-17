@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 /**
  * State interface for async operations
@@ -54,7 +54,7 @@ export const useAsyncState = <T>(): UseAsyncStateReturn<T> => {
       setState({
         data: null,
         loading: false,
-        error: error instanceof Error ? error.message : 'An error occurred',
+        error: error instanceof Error ? error.message : "An error occurred",
       });
     }
   }, []);

@@ -1,59 +1,105 @@
-const js = require('@eslint/js');
-const typescript = require('@typescript-eslint/eslint-plugin');
-const typescriptParser = require('@typescript-eslint/parser');
-const reactHooks = require('eslint-plugin-react-hooks');
-const reactNative = require('eslint-plugin-react-native');
-const prettier = require('eslint-config-prettier');
+const js = require("@eslint/js");
+const typescript = require("@typescript-eslint/eslint-plugin");
+const typescriptParser = require("@typescript-eslint/parser");
+const react = require("eslint-plugin-react");
+const reactHooks = require("eslint-plugin-react-hooks");
+const reactNative = require("eslint-plugin-react-native");
+const prettier = require("eslint-plugin-prettier");
 
 module.exports = [
   js.configs.recommended,
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{js,jsx,ts,tsx}"],
+    ignores: ["node_modules/**", ".expo/**", "coverage/**", "dist/**"],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
+        ecmaVersion: 2022,
+        sourceType: "module",
         ecmaFeatures: {
           jsx: true,
         },
       },
     },
     plugins: {
-      '@typescript-eslint': typescript,
-      'react-hooks': reactHooks,
-      'react-native': reactNative,
+      "@typescript-eslint": typescript,
+      react,
+      "react-hooks": reactHooks,
+      "react-native": reactNative,
+      prettier,
     },
     rules: {
-      // React Hooks rules
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
+      // TypeScript rules
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_" },
+      ],
+      "@typescript-eslint/no-explicit-any": "warn",
+      "no-unused-vars": "off", // Turn off JS version in favor of TS version
 
-      // TypeScript specific rules
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-empty-function': 'off',
+      // React rules
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
 
-      // React Native specific rules
-      'react-native/no-unused-styles': 'error',
-      'react-native/split-platform-components': 'error',
-      'react-native/no-inline-styles': 'warn',
-      'react-native/no-color-literals': 'warn',
-      'react-native/no-raw-text': 'off',
+      // React Native rules
+      "react-native/no-unused-styles": "error",
+      "react-native/no-inline-styles": "warn",
+      "react-native/no-color-literals": "warn",
 
       // General rules
-      'no-console': 'warn',
-      'prefer-const': 'error',
-      'no-var': 'error',
-      'no-undef': 'off', // TypeScript handles this
+      "no-console": "warn",
+      "prettier/prettier": "error",
+
+      // Disable some rules that are too strict
+      "no-undef": "off", // TypeScript handles this
     },
     settings: {
-      'react-native': {
-        version: 'detect',
+      react: {
+        version: "detect",
       },
     },
   },
-  prettier,
+  // Configuration for Node.js config files
+  {
+    files: ["*.config.js", "babel.config.js", "jest.setup.js"],
+    languageOptions: {
+      sourceType: "script",
+      globals: {
+        module: "readonly",
+        require: "readonly",
+        process: "readonly",
+        __dirname: "readonly",
+        __filename: "readonly",
+        console: "readonly",
+        global: "readonly",
+      },
+    },
+    rules: {
+      "no-undef": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "no-unused-vars": "off",
+    },
+  },
+  // Configuration for Jest test files
+  {
+    files: ["**/*.test.{js,jsx,ts,tsx}", "**/__tests__/**/*", "jest.setup.js"],
+    languageOptions: {
+      globals: {
+        jest: "readonly",
+        test: "readonly",
+        expect: "readonly",
+        describe: "readonly",
+        it: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+        beforeAll: "readonly",
+        afterAll: "readonly",
+      },
+    },
+    rules: {
+      "no-undef": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "no-unused-vars": "off",
+    },
+  },
 ];
