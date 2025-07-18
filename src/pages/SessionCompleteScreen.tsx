@@ -226,63 +226,7 @@ export const SessionCompleteScreen: React.FC<SessionCompleteScreenProps> = ({
       fontFamily: "MavenPro-SemiBold",
       color: "#000",
     },
-    // Modal styles
-    modalBackdrop: {
-      flex: 1,
-      backgroundColor: "rgba(0,0,0,0.25)",
-      justifyContent: "center",
-      alignItems: "center",
-      paddingHorizontal: 24,
-    },
-    modalContent: {
-      width: "100%",
-      maxWidth: 340,
-      borderRadius: 20,
-      backgroundColor: "#F0F0F3",
-      padding: 24,
-      alignItems: "center",
-      boxShadow:
-        Platform.OS === "web"
-          ? "-10px -10px 30px #FFFFFF, 10px 10px 30px rgba(174,174,192,0.5)"
-          : undefined,
-    },
-    modalTitle: {
-      fontSize: 22,
-      fontWeight: "600",
-      fontFamily: "MavenPro-SemiBold",
-      color: "#000",
-      marginBottom: 18,
-      textAlign: "center",
-    },
-    pointsInput: {
-      width: "100%",
-      height: 56,
-      borderRadius: 12,
-      backgroundColor: "#F0F0F3",
-      paddingHorizontal: 16,
-      fontSize: 20,
-      fontFamily: "MavenPro-Medium",
-      color: "#000",
-      marginBottom: 24,
-      boxShadow:
-        Platform.OS === "web"
-          ? "inset -4px -4px 8px #FFFFFF, inset 4px 4px 8px rgba(0, 0, 0, 0.1)"
-          : undefined,
-    },
-    confirmButton: {
-      width: "100%",
-      height: 56,
-      borderRadius: 28,
-      backgroundColor: "#7859BB",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    confirmButtonText: {
-      fontSize: 20,
-      fontWeight: "600",
-      fontFamily: "MavenPro-SemiBold",
-      color: "#FFFFFF",
-    },
+    // All modal-related styles removed – modal is not used on this screen.
   });
 
   // -------------------------------------------------------------------------
@@ -322,7 +266,9 @@ export const SessionCompleteScreen: React.FC<SessionCompleteScreenProps> = ({
       {/* Gap */}
       <View style={{ height: 24 }} />
 
-      <Text style={styles.statsTextSecondary}>{pointsEarned} points earned</Text>
+      <Text style={styles.statsTextSecondary}>
+        {pointsEarned} points earned
+      </Text>
     </View>
   );
 
@@ -353,4 +299,4 @@ export const SessionCompleteScreen: React.FC<SessionCompleteScreenProps> = ({
       {/* No handlers – allocation already done. */}
     </View>
   );
-}; 
+};

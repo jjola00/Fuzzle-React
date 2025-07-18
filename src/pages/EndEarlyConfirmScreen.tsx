@@ -291,8 +291,8 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
       </TouchableOpacity>
 
       {/* Points allocation modal/overlay */}
-      {pointsModalVisible && (
-        Platform.OS === "web" ? (
+      {pointsModalVisible &&
+        (Platform.OS === "web" ? (
           <View
             style={{
               position: "absolute",
@@ -452,8 +452,7 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
               </View>
             </KeyboardAvoidingView>
           </Modal>
-        )
-      )}
+        ))}
     </View>
   );
 };
