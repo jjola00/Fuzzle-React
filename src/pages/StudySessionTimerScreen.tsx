@@ -114,6 +114,9 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
   // Calculate slider position from the constrained selected minutes (not directly from angle)
   const sliderPosition = getSliderPosition(minutesToAngle(selectedMinutes));
 
+  // Progress ratio (0 to 1) based on the selected minutes, accounting for the minimum value
+  const progress = (selectedMinutes - MIN_MINUTES) / (MAX_MINUTES - MIN_MINUTES);
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -355,11 +358,11 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
               <Circle
                 cx="118"
                 cy="118"
-                r="116"
+                r="100"
                 fill="none"
                 stroke="#000000"
-                strokeWidth="2"
-                opacity="0.07"
+                strokeWidth="1"
+                opacity="0.1"
               />
               <Circle
                 cx="118"
@@ -368,15 +371,15 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
                 fill="none"
                 stroke="#9281CD"
                 strokeWidth="2"
-                strokeDasharray={`${(selectedMinutes / MAX_MINUTES) * 660} 660`}
-                strokeDashoffset="-165"
+                strokeDasharray={`${progress * 660} 660`}
+                strokeDashoffset="0"
                 transform="rotate(-90 118 118)"
               />
               {/* Slider position indicator */}
               <Circle
                 cx={sliderPosition.x}
                 cy={sliderPosition.y}
-                r="24.5"
+                r="18"
                 fill="#FFFFFF"
                 stroke="none"
                 filter="drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))"

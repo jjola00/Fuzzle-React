@@ -71,10 +71,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     catImage: {
       width: 240,
       height: 200,
-      position: "absolute",
-      top: -110,
-      right: 10,
-      zIndex: 2,
     },
     startSessionButton: {
       width: 294, 
@@ -180,11 +176,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </Text>
 
         <View style={styles.startSessionContainer}>
-          <Image
-            source={require("../../assets/cat3.png")}
-            style={styles.catImage}
-            resizeMode="contain"
-          />
+          <TouchableOpacity
+            onPress={handleStartNewSession}
+            activeOpacity={0.8}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Start new session"
+            style={{ position: 'absolute', top: -110, right: 10, zIndex: 2 }}
+          >
+            <Image
+              source={require("../../assets/cat3.png")}
+              style={styles.catImage}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.startSessionButton}
             onPress={handleStartNewSession}
