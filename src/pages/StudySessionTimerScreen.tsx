@@ -440,7 +440,7 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
           accessibilityLabel="Start study session"
         >
           <Text style={styles.startButtonText} selectable={false}>
-            Ok, lets begin!
+            Ok, let's begin!
           </Text>
         </TouchableOpacity>
       </View>
