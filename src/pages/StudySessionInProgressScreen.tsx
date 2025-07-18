@@ -6,8 +6,12 @@ import Svg, { Circle } from "react-native-svg";
 interface StudySessionInProgressScreenProps {
   /** Total session length in minutes */
   totalMinutes: number;
-  /** Callback when the user ends the session early or when time reaches zero */
+  /** Invoke when timer completes naturally */
   onEndSession: () => void;
+  /** Ask parent to show confirmation dialog; provide current remaining seconds */
+  onRequestEndEarly: (remainingSeconds: number) => void;
+  /** When resuming, optionally inject starting remaining seconds */
+  initialRemainingSeconds?: number;
 }
 
 /**
@@ -24,12 +28,15 @@ interface StudySessionInProgressScreenProps {
 export const StudySessionInProgressScreen: React.FC<StudySessionInProgressScreenProps> = ({
   totalMinutes,
   onEndSession,
+  onRequestEndEarly,
+  initialRemainingSeconds,
 }) => {
   // Total duration in seconds (immutable)
   const totalSeconds = totalMinutes * 60;
 
-  // Mutable seconds left; we round down so the large number updates once per minute
-  const [remainingSeconds, setRemainingSeconds] = useState<number>(totalSeconds);
+  const [remainingSeconds, setRemainingSeconds] = useState<number>(
+    initialRemainingSeconds ?? totalSeconds,
+  );
 
   // Keep latest remainingSeconds in a ref so the interval callback always has up-to-date value
   const remainingRef = useRef(remainingSeconds);
@@ -284,7 +291,7 @@ export const StudySessionInProgressScreen: React.FC<StudySessionInProgressScreen
         {/* End early button */}
         <TouchableOpacity
           style={styles.endButton}
-          onPress={onEndSession}
+          onPress={() => onRequestEndEarly(remainingSeconds)}
           activeOpacity={0.8}
           accessible
           accessibilityRole="button"

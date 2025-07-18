@@ -12,6 +12,7 @@ import {
   StudySessionsScreen,
   StudySessionTimerScreen,
   StudySessionInProgressScreen,
+  EndEarlyConfirmScreen,
 } from "@/pages";
 
 // Define screen types for navigation
@@ -22,7 +23,8 @@ type ScreenType =
   | "account"
   | "sessions"
   | "timer"
-  | "inProgress";
+  | "inProgress"
+  | "confirmEnd";
 
 /**
  * Main AppContent component
@@ -33,6 +35,7 @@ const AppContent: React.FC = () => {
   const { theme, isDarkMode } = useTheme();
   const [currentScreen, setCurrentScreen] = useState<ScreenType>("loading");
   const [activeSessionMinutes, setActiveSessionMinutes] = useState<number>(0);
+  const [remainingSeconds, setRemainingSeconds] = useState<number>(0);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   // Load fonts on component mount
@@ -114,6 +117,7 @@ const AppContent: React.FC = () => {
       onStartSession={(minutes: number) => {
         console.log(`Starting ${minutes} minute session`);
         setActiveSessionMinutes(minutes);
+        setRemainingSeconds(minutes * 60);
         navigateToScreen("inProgress");
       }}
     />
@@ -124,6 +128,21 @@ const AppContent: React.FC = () => {
     <StudySessionInProgressScreen
       totalMinutes={activeSessionMinutes}
       onEndSession={() => navigateToScreen("home")}
+      initialRemainingSeconds={remainingSeconds}
+      onRequestEndEarly={(secs) => {
+        setRemainingSeconds(secs);
+        navigateToScreen("confirmEnd");
+      }}
+    />
+  );
+
+  const renderEndEarlyConfirmScreen = () => (
+    <EndEarlyConfirmScreen
+      remainingSeconds={remainingSeconds}
+      onConfirmWithPoints={() => navigateToScreen("home")}
+      onConfirmWithoutPoints={() => navigateToScreen("home")}
+      onCancel={() => navigateToScreen("inProgress")}
+      onNavigateBack={() => navigateToScreen("inProgress")}
     />
   );
 
@@ -144,6 +163,8 @@ const AppContent: React.FC = () => {
         return renderStudySessionTimerScreen();
       case "inProgress":
         return renderStudySessionInProgressScreen();
+      case "confirmEnd":
+        return renderEndEarlyConfirmScreen();
       default:
         return renderHomeScreen();
     }
