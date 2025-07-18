@@ -88,6 +88,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [code-quality, security-scan]
     if: github.event_name == 'pull_request'
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -104,7 +106,7 @@ jobs:
         with:
           expo-version: ${{ env.EXPO_CLI_VERSION }}
           eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+          token: ${{ env.EXPO_TOKEN }}
           packager: npm
 
       - name: Install dependencies
@@ -135,6 +137,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [code-quality, security-scan]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -151,7 +155,7 @@ jobs:
         with:
           expo-version: ${{ env.EXPO_CLI_VERSION }}
           eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+          token: ${{ env.EXPO_TOKEN }}
           packager: npm
 
       - name: Install dependencies
