@@ -42,26 +42,27 @@ export const StudySessionScreen: React.FC<StudySessionInProgressScreenProps> = (
   const remainingRef = useRef(remainingSeconds);
   remainingRef.current = remainingSeconds;
 
-  // Tick every second using Date.now() to avoid timing drift.
+  const initialRemaining =
+    initialRemainingSeconds ?? totalSeconds;          // immutable starting value
+  const endTimeRef = useRef(Date.now() + initialRemaining * 1000);
+
   useEffect(() => {
-    const endTime = Date.now() + remainingSeconds * 1000;
+    const id = setInterval(() => {
+      const remaining = Math.max(
+        Math.round((endTimeRef.current - Date.now()) / 1000),
+        0,
+      );
 
-    const tick = () => {
-      const now = Date.now();
-      const remaining = Math.max(Math.round((endTime - now) / 1000), 0);
+      setRemainingSeconds(remaining);
 
-      if (remaining <= 0) {
-        setRemainingSeconds(0);
+      if (remaining === 0) {
+        clearInterval(id);
         onEndSession();
-      } else {
-        setRemainingSeconds(remaining);
-        setTimeout(tick, 1000);
       }
-    };
+    }, 1000);
 
-    tick();
-    return () => {}; // No cleanup needed as setTimeout is self-contained.
-  }, [onEndSession, remainingSeconds]);
+    return () => clearInterval(id);  // important --> prevents leaks
+  }, [onEndSession]);                 // NOT `remainingSeconds`
 
   // Derive minutes remaining (ceil so “55” shows until <54:00 etc.)
   const minutesDisplay = Math.ceil(remainingSeconds / 60);
