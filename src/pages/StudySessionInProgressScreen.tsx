@@ -124,9 +124,13 @@ export const StudySessionInProgressScreen: React.FC<StudySessionInProgressScreen
       textAlign: "center",
       fontFamily: "MavenPro-SemiBold",
       userSelect: "none",
-      textShadowColor: "rgba(0, 0, 0, 0.25)",
-      textShadowOffset: { width: 0, height: 4 },
-      textShadowRadius: 4,
+      ...(Platform.OS === "web"
+        ? { textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }
+        : {
+            textShadowColor: "rgba(0, 0, 0, 0.25)",
+            textShadowOffset: { width: 0, height: 4 },
+            textShadowRadius: 4,
+          }),
     },
     content: {
       flex: 1,
