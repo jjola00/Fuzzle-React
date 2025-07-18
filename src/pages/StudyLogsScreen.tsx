@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar, Platform } from "react-native";
-import { useTheme } from "@/contexts/ThemeContext";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  StatusBar,
+  Platform,
+} from "react-native";
 import { useAsyncState } from "@/hooks/useAsyncState";
 import { databaseService, SessionData } from "@/services";
 import { Button } from "@/components";
@@ -18,8 +25,8 @@ interface StudySessionsScreenProps {
 export const StudyLogsScreen: React.FC<StudySessionsScreenProps> = ({
   onNavigateBack,
 }) => {
-  const { theme } = useTheme();
-  const { state: sessionsState, execute: fetchSessions } = useAsyncState<SessionData[]>();
+  const { state: sessionsState, execute: fetchSessions } =
+    useAsyncState<SessionData[]>();
   const [allSessions, setAllSessions] = useState<SessionData[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMorePages, setHasMorePages] = useState(true);
@@ -35,10 +42,14 @@ export const StudyLogsScreen: React.FC<StudySessionsScreenProps> = ({
   // Load sessions with pagination
   const loadSessions = async (page: number, isInitialLoad: boolean = false) => {
     const offset = page * ITEMS_PER_PAGE;
-    
+
     if (isInitialLoad) {
       fetchSessions(async () => {
-        const sessions = await databaseService.getSessions(undefined, offset, ITEMS_PER_PAGE);
+        const sessions = await databaseService.getSessions(
+          undefined,
+          offset,
+          ITEMS_PER_PAGE,
+        );
         setAllSessions(sessions);
         setCurrentPage(0);
         setHasMorePages(sessions.length === ITEMS_PER_PAGE);
@@ -47,12 +58,16 @@ export const StudyLogsScreen: React.FC<StudySessionsScreenProps> = ({
     } else {
       setIsLoadingMore(true);
       try {
-        const newSessions = await databaseService.getSessions(undefined, offset, ITEMS_PER_PAGE);
-        setAllSessions(prev => [...prev, ...newSessions]);
+        const newSessions = await databaseService.getSessions(
+          undefined,
+          offset,
+          ITEMS_PER_PAGE,
+        );
+        setAllSessions((prev) => [...prev, ...newSessions]);
         setCurrentPage(page);
         setHasMorePages(newSessions.length === ITEMS_PER_PAGE);
       } catch (error) {
-        console.error('Error loading more sessions:', error);
+        console.error("Error loading more sessions:", error);
       } finally {
         setIsLoadingMore(false);
       }
@@ -84,7 +99,9 @@ export const StudyLogsScreen: React.FC<StudySessionsScreenProps> = ({
     <View key={session.id} style={styles.sessionItem}>
       <View style={styles.sessionContent}>
         <Text style={styles.sessionDuration} selectable={false}>
-          {session.ended_early ? "Ended early" : `${session.duration_minutes} Minutes`}
+          {session.ended_early
+            ? "Ended early"
+            : `${session.duration_minutes} Minutes`}
         </Text>
         {!session.ended_early && (
           <Text style={styles.sessionBreaks} selectable={false}>
@@ -302,7 +319,7 @@ export const StudyLogsScreen: React.FC<StudySessionsScreenProps> = ({
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#F0F0F3" />
-      
+
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
@@ -316,13 +333,13 @@ export const StudyLogsScreen: React.FC<StudySessionsScreenProps> = ({
             ‹
           </Text>
         </TouchableOpacity>
-        
+
         <Text style={styles.title} selectable={false}>
           Past sessions
         </Text>
       </View>
 
-      <ScrollView 
+      <ScrollView
         style={styles.content}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 40 }}
@@ -349,9 +366,9 @@ export const StudyLogsScreen: React.FC<StudySessionsScreenProps> = ({
           </View>
         )}
 
-        {sessionsState.data && sessionsState.data.length === 0 && (
-          renderEmptyState()
-        )}
+        {sessionsState.data &&
+          sessionsState.data.length === 0 &&
+          renderEmptyState()}
 
         {allSessions.length > 0 && (
           <>
@@ -362,4 +379,4 @@ export const StudyLogsScreen: React.FC<StudySessionsScreenProps> = ({
       </ScrollView>
     </View>
   );
-}; 
+};

@@ -50,6 +50,7 @@ npm start
 This project includes a comprehensive CI/CD pipeline with:
 
 ### ✅ Automated Quality Checks
+
 - **TypeScript**: Strict type checking
 - **ESLint**: Code quality and style enforcement
 - **Prettier**: Consistent code formatting
@@ -57,18 +58,21 @@ This project includes a comprehensive CI/CD pipeline with:
 - **Security**: Dependency vulnerability scanning
 
 ### 🔨 Automated Building
+
 - **Preview Builds**: For pull requests
 - **Production Builds**: For releases
 - **Multiple Platforms**: iOS and Android support
 - **EAS Integration**: Managed build process
 
 ### 🚀 Automated Deployment
+
 - **App Store**: Automated iOS submissions
 - **Play Store**: Automated Android submissions
 - **OTA Updates**: Over-the-air updates for quick fixes
 - **Manual Deployment**: Workflow dispatch for releases
 
 ### 📊 Monitoring
+
 - **Coverage Reports**: Code coverage tracking
 - **Build Status**: Real-time build monitoring
 - **Slack Notifications**: Team notifications
@@ -215,6 +219,7 @@ npm run test:coverage # Generate coverage report
 ### Manual Deployment
 
 Use GitHub Actions workflow dispatch:
+
 1. Go to Actions tab in GitHub
 2. Select "Deploy to App Stores"
 3. Choose platform and track

@@ -337,7 +337,7 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({
       color: "#000000",
       fontFamily: "MavenPro-Regular",
       flex: 1,
-      maxWidth: 200, 
+      maxWidth: 200,
       backgroundColor: "#FFFFFF",
       padding: 8,
       borderRadius: 8,

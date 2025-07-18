@@ -1,5 +1,13 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Platform, StatusBar, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+  StatusBar,
+  Image,
+} from "react-native";
 
 interface EndEarlyConfirmScreenProps {
   /** Remaining seconds in the session when user pressed End Early */
@@ -15,14 +23,12 @@ interface EndEarlyConfirmScreenProps {
 }
 
 export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
-  remainingSeconds,
+  remainingSeconds: _remainingSeconds,
   onConfirmWithPoints,
   onConfirmWithoutPoints,
   onCancel,
   onNavigateBack,
 }) => {
-  const minutesRemaining = Math.ceil(remainingSeconds / 60);
-
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -203,4 +209,4 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
       </TouchableOpacity>
     </View>
   );
-}; 
+};

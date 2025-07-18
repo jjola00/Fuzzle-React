@@ -1,5 +1,13 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Platform, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  StatusBar,
+  Platform,
+  Image,
+} from "react-native";
 
 // Props interface for HomeScreen
 interface HomeScreenProps {
@@ -73,8 +81,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       height: 200,
     },
     startSessionButton: {
-      width: 294, 
-      height: 98, 
+      width: 294,
+      height: 98,
       borderRadius: 20,
       backgroundColor: "#F0F0F3",
       justifyContent: "center",
@@ -169,7 +177,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#F0F0F3" />
-      
+
       <View style={styles.content}>
         <Text style={styles.title} selectable={false}>
           Fuzzle
@@ -182,7 +190,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             accessible={true}
             accessibilityRole="button"
             accessibilityLabel="Start new session"
-            style={{ position: 'absolute', top: -110, right: 10, zIndex: 2 }}
+            style={{ position: "absolute", top: -110, right: 10, zIndex: 2 }}
           >
             <Image
               source={require("../../assets/sleepyCat.png")}

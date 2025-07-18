@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Platform, StatusBar, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+  StatusBar,
+  Image,
+} from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
 // Props interface for StudySessionInProgressScreen
@@ -25,7 +33,9 @@ interface StudySessionInProgressScreenProps {
  *   • A purple progress ring that shrinks clockwise as time elapses
  *   • An “End early” button beneath the timer
  */
-export const StudySessionScreen: React.FC<StudySessionInProgressScreenProps> = ({
+export const StudySessionScreen: React.FC<
+  StudySessionInProgressScreenProps
+> = ({
   totalMinutes,
   onEndSession,
   onRequestEndEarly,
@@ -42,8 +52,7 @@ export const StudySessionScreen: React.FC<StudySessionInProgressScreenProps> = (
   const remainingRef = useRef(remainingSeconds);
   remainingRef.current = remainingSeconds;
 
-  const initialRemaining =
-    initialRemainingSeconds ?? totalSeconds;          // immutable starting value
+  const initialRemaining = initialRemainingSeconds ?? totalSeconds; // immutable starting value
   const endTimeRef = useRef(Date.now() + initialRemaining * 1000);
 
   useEffect(() => {
@@ -61,8 +70,8 @@ export const StudySessionScreen: React.FC<StudySessionInProgressScreenProps> = (
       }
     }, 1000);
 
-    return () => clearInterval(id);  // important --> prevents leaks
-  }, [onEndSession]);                 // NOT `remainingSeconds`
+    return () => clearInterval(id); // important --> prevents leaks
+  }, [onEndSession]); // NOT `remainingSeconds`
 
   // Derive minutes remaining (ceil so “55” shows until <54:00 etc.)
   const minutesDisplay = Math.ceil(remainingSeconds / 60);
@@ -264,7 +273,10 @@ export const StudySessionScreen: React.FC<StudySessionInProgressScreenProps> = (
           </View>
 
           {/* Progress ring */}
-          <Svg style={StyleSheet.absoluteFill} viewBox={`0 0 ${CIRCLE_CONTAINER_SIZE} ${CIRCLE_CONTAINER_SIZE}`}>
+          <Svg
+            style={StyleSheet.absoluteFill}
+            viewBox={`0 0 ${CIRCLE_CONTAINER_SIZE} ${CIRCLE_CONTAINER_SIZE}`}
+          >
             {/* Grey track */}
             <Circle
               cx={CIRCLE_RADIUS}
@@ -306,4 +318,4 @@ export const StudySessionScreen: React.FC<StudySessionInProgressScreenProps> = (
       </View>
     </View>
   );
-}; 
+};

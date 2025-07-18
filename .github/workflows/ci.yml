@@ -7,42 +7,42 @@ on:
     branches: [main, develop]
 
 env:
-  NODE_VERSION: '18'
-  EXPO_CLI_VERSION: 'latest'
+  NODE_VERSION: "18"
+  EXPO_CLI_VERSION: "latest"
 
 jobs:
   # Code Quality and Testing
   code-quality:
     name: Code Quality & Testing
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          
+          cache: "npm"
+
       - name: Install dependencies
         run: |
           npm ci
           npx expo install --fix
-          
+
       - name: Run TypeScript type check
         run: npm run type-check
-        
+
       - name: Run ESLint
         run: npm run lint
-        
+
       - name: Check Prettier formatting
         run: npm run format:check
-        
+
       - name: Run tests with coverage
         run: npm run test:coverage
-        
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -55,28 +55,28 @@ jobs:
   security-scan:
     name: Security Scanning
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Run npm audit
         run: npm audit --audit-level=high
         continue-on-error: true
-        
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
+
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         if: always()
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: "trivy-results.sarif"
 
   # Build Preview for Pull Requests
   build-preview:
@@ -84,35 +84,35 @@ jobs:
     runs-on: ubuntu-latest
     needs: [code-quality, security-scan]
     if: github.event_name == 'pull_request'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          
+          cache: "npm"
+
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v8
         with:
           expo-version: ${{ env.EXPO_CLI_VERSION }}
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
-          
+
       - name: Install dependencies
         run: |
           npm ci
           npx expo install --fix
-          
+
       - name: Build preview for iOS
         run: npx eas build --platform ios --profile preview --non-interactive
-        
+
       - name: Build preview for Android
         run: npx eas build --platform android --profile preview --non-interactive
-        
+
       - name: Comment PR with build info
         uses: actions/github-script@v6
         with:
@@ -130,35 +130,35 @@ jobs:
     runs-on: ubuntu-latest
     needs: [code-quality, security-scan]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          
+          cache: "npm"
+
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v8
         with:
           expo-version: ${{ env.EXPO_CLI_VERSION }}
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
-          
+
       - name: Install dependencies
         run: |
           npm ci
           npx expo install --fix
-          
+
       - name: Build production for iOS
         run: npx eas build --platform ios --profile production --non-interactive
-        
+
       - name: Build production for Android
         run: npx eas build --platform android --profile production --non-interactive
-        
+
       - name: Create GitHub Release
         uses: actions/create-release@v1
         env:
@@ -168,10 +168,10 @@ jobs:
           release_name: Release v${{ github.run_number }}
           body: |
             Production build completed successfully.
-            
+
             Changes in this release:
             - See commit history for details
-            
+
             Build artifacts available on EAS dashboard.
           draft: false
-          prerelease: false 
+          prerelease: false

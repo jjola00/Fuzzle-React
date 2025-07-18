@@ -1,12 +1,15 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 // Supabase configuration from environment variables
 const supabaseUrl: string | undefined = process.env.EXPO_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey: string | undefined = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseAnonKey: string | undefined =
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
 // Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables. Please check your .env file.');
+  throw new Error(
+    "Missing Supabase environment variables. Please check your .env file.",
+  );
 }
 
 // At this point, supabaseUrl and supabaseAnonKey are guaranteed to be non-null
@@ -14,7 +17,10 @@ const validatedSupabaseUrl = supabaseUrl!;
 const validatedSupabaseAnonKey = supabaseAnonKey!;
 
 // Create and export the Supabase client
-export const supabase = createClient(validatedSupabaseUrl, validatedSupabaseAnonKey);
+export const supabase = createClient(
+  validatedSupabaseUrl,
+  validatedSupabaseAnonKey,
+);
 
 // Database types matching the schema
 export interface User {
@@ -58,4 +64,4 @@ export interface Settings {
   user_id: string;
   notifications_enabled: boolean;
   dark_mode_enabled: boolean;
-} 
+}

@@ -105,9 +105,7 @@ const AppContent: React.FC = () => {
 
   // Render StudySessionsScreen with navigation callback
   const renderStudySessionsScreen = () => (
-    <StudyLogsScreen
-      onNavigateBack={() => navigateToScreen("home")}
-    />
+    <StudyLogsScreen onNavigateBack={() => navigateToScreen("home")} />
   );
 
   // Render StudySessionTimerScreen with navigation callbacks

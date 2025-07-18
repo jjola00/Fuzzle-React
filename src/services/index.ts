@@ -10,4 +10,4 @@ export type { User, Session, Points, Reward, Settings } from "./supabase";
 // Example structure:
 // export { authService } from './auth';
 // export { notificationService } from './notification';
-// export { analyticsService } from './analytics'; 
+// export { analyticsService } from './analytics';
