@@ -5,6 +5,7 @@ import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Platform, Image } 
 interface HomeScreenProps {
   onNavigateToSettings: () => void;
   onNavigateToSessions: () => void;
+  onNavigateToTimer: () => void;
 }
 
 /**
@@ -15,11 +16,12 @@ interface HomeScreenProps {
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateToSettings,
   onNavigateToSessions,
+  onNavigateToTimer,
 }) => {
   // Handle start new session button press
   const handleStartNewSession = () => {
     console.log("Start new session pressed");
-    // TODO: Implement navigation to new session screen
+    onNavigateToTimer();
   };
 
   // Handle points tally button press
@@ -52,9 +54,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       marginBottom: 100,
       fontFamily: "MavenPro-SemiBold",
       userSelect: "none",
-      textShadowColor: "rgba(0, 0, 0, 0.25)",
-      textShadowOffset: { width: 0, height: 4 },
-      textShadowRadius: 4,
+      // Conditional shadow styling for web vs native
+      ...(Platform.OS === "web"
+        ? { textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }
+        : {
+            textShadowColor: "rgba(0, 0, 0, 0.25)",
+            textShadowOffset: { width: 0, height: 4 },
+            textShadowRadius: 4,
+          }),
     },
     startSessionContainer: {
       alignItems: "center",
@@ -70,8 +77,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       zIndex: 2,
     },
     startSessionButton: {
-      width: 294,
-      height: 98,
+      width: 320, // Increased from 294
+      height: 120, // Increased from 98
       borderRadius: 20,
       backgroundColor: "#F0F0F3",
       justifyContent: "center",

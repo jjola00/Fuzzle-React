@@ -6,6 +6,7 @@ export { LoadingScreen } from "./LoadingScreen";
 export { SettingsScreen } from "./SettingsScreen";
 export { AccountSettingsScreen } from "./AccountSettingsScreen";
 export { StudySessionsScreen } from "./StudySessionsScreen";
+export { StudySessionTimerScreen } from "./StudySessionTimerScreen";
 
 // TODO: Add more page exports as they are created
 // Example structure:

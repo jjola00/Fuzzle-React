@@ -1,4 +1,4 @@
-/* home */
+/* setting timer */
 
 position: relative;
 width: 375px;
@@ -10,20 +10,20 @@ background: #F0F0F3;
 /* btn / back */
 
 position: absolute;
-width: 294px;
-height: 98.4px;
-left: 33px;
-top: 181.6px;
+width: 279px;
+height: 64px;
+left: 46px;
+top: 510px;
 
 
 
 /* button/normal */
 
 position: absolute;
-width: 294px;
-height: 98.4px;
-left: 33px;
-top: 181.6px;
+width: 279px;
+height: 64px;
+left: 46px;
+top: 510px;
 
 
 
@@ -57,32 +57,33 @@ box-sizing: border-box;
 
 position: absolute;
 visibility: hidden;
-width: 65.77px;
-height: 65.77px;
-left: 132.33px;
-top: 208.66px;
+width: 60.72px;
+height: 60.72px;
+left: 140.27px;
+top: 527.6px;
 
 /* Gray 40 */
 border: 2px solid #A3ADB2;
-transform: matrix(-0.95, -0.32, 0.95, -0.32, 0, 0);
+transform: matrix(-0.97, -0.22, 0.97, -0.22, 0, 0);
 
 
-/* Start new session */
+/* Group 33 */
 
 position: absolute;
-width: 351px;
-height: 39px;
-left: 3px;
-top: 212px;
+width: 167.4px;
+height: 38.4px;
+left: 101.8px;
+top: 522.8px;
 
-font-family: 'Maven Pro';
-font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 28px;
-text-align: center;
 
-color: #000000;
+
+/* Vector */
+
+position: absolute;
+left: 27.15%;
+right: 28.21%;
+top: 64.38%;
+bottom: 30.89%;
 
 
 
@@ -420,6 +421,144 @@ bottom: 14.66%;
 background: #EA7B62;
 
 
+/* gage */
+
+position: absolute;
+width: 236px;
+height: 236px;
+left: 68px;
+top: 108px;
+
+
+
+/* Rectangle 7 */
+
+position: absolute;
+width: 200px;
+height: 200px;
+left: 84px;
+top: 126px;
+
+background: #F0F0F3;
+box-shadow: -10px -10px 30px #FFFFFF, 10px 10px 30px rgba(174, 174, 192, 0.5);
+border-radius: 110px;
+
+
+/* Union */
+
+position: absolute;
+visibility: hidden;
+width: 44px;
+height: 62.48px;
+left: 164px;
+top: 180px;
+
+background: #4D41A4;
+
+
+/* Rectangle 1 */
+
+position: absolute;
+width: 38.72px;
+height: 5.28px;
+left: 166.64px;
+top: 180px;
+
+background: #C4C4C4;
+
+
+/* Rectangle 2 */
+
+position: absolute;
+width: 44px;
+height: 4.4px;
+left: 164px;
+top: 185.28px;
+
+background: #C4C4C4;
+
+
+/* Subtract */
+
+position: absolute;
+width: 38.72px;
+height: 52.8px;
+left: 166.64px;
+top: 189.68px;
+
+background: #C4C4C4;
+
+
+/* Rectangle 3 */
+
+position: absolute;
+width: 38.72px;
+height: 52.8px;
+left: 166.64px;
+top: 189.68px;
+
+background: #C4C4C4;
+
+
+/* Ellipse 1 */
+
+position: absolute;
+width: 17.6px;
+height: 17.6px;
+left: 177.2px;
+top: 202.88px;
+
+background: #C4C4C4;
+
+
+/* Ellipse 2 */
+
+position: absolute;
+visibility: hidden;
+width: 12px;
+height: 12px;
+left: 202px;
+top: 171px;
+
+background: #E30F0F;
+border: 5px solid #F0F0F3;
+
+
+/* Group 21 */
+
+position: absolute;
+width: 236px;
+height: 236px;
+left: 68px;
+top: 108px;
+
+
+
+/* 260 - gray */
+
+position: absolute;
+width: 236px;
+height: 236px;
+left: 68px;
+top: 108px;
+
+opacity: 0.07;
+border: 2px solid #000000;
+filter: drop-shadow(-10px -10px 30px #FFFFFF) drop-shadow(10px 10px 30px rgba(174, 174, 192, 0.4));
+border-radius: 130px;
+
+
+/* 260 - green */
+
+position: absolute;
+width: 209.44px;
+height: 236px;
+left: 94.56px;
+top: 108px;
+
+border: 2px solid #9281CD;
+
+
 /* logo */
 
 position: absolute;
@@ -533,10 +672,10 @@ background: #231F20;
 /* btn / notification */
 
 position: absolute;
-width: 86px;
-height: 80px;
-left: 266px;
-top: 694px;
+width: 40px;
+height: 40px;
+left: 316px;
+top: 53px;
 
 filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 
@@ -544,12 +683,11 @@ filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 /* button/normal */
 
 position: absolute;
-width: 86px;
-height: 80px;
-left: 266px;
-top: 694px;
+width: 40px;
+height: 40px;
+left: 316px;
+top: 53px;
 
-border-radius: 50px;
 
 
 /* Rectangle 1 */
@@ -562,7 +700,7 @@ bottom: 0%;
 
 background: #F0F0F3;
 box-shadow: -5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF;
-border-radius: 70px;
+border-radius: 20px;
 
 
 /* framer */
@@ -574,6 +712,143 @@ right: 25.51%;
 top: 25.51%;
 bottom: 25.51%;
 
+
+
+/* notification_important-24px 1 */
+
+position: absolute;
+width: 24px;
+height: 24px;
+left: 324px;
+top: 61px;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 16.67%;
+right: 16.67%;
+top: 10.42%;
+bottom: 8.33%;
+
+/* Gray 40 */
+background: #A3ADB2;
+
+
+/* Vector */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Ellipse 2 */
+
+position: absolute;
+width: 4px;
+height: 4px;
+left: 339.5px;
+top: 64px;
+
+background: #7859BB;
+border: 2px solid #F0F0F3;
+
+
+/* btn / hamburger */
+
+position: absolute;
+width: 40px;
+height: 40px;
+left: 22px;
+top: 56px;
+
+
+
+/* button/normal */
+
+position: absolute;
+width: 40px;
+height: 40px;
+left: 22px;
+top: 56px;
+
+
+
+/* Rectangle 1 */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+background: #F0F0F3;
+box-shadow: -5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1);
+border-radius: 20px;
+
+
+/* framer */
+
+position: absolute;
+visibility: hidden;
+left: 25.51%;
+right: 25.51%;
+top: 25.51%;
+bottom: 25.51%;
+
+
+
+/* Group 24 */
+
+position: absolute;
+left: 8.8%;
+right: 86.4%;
+top: 8.62%;
+bottom: 89.9%;
+
+
+
+/* Rectangle 10 */
+
+position: absolute;
+left: 8.8%;
+right: 86.4%;
+top: 8.62%;
+bottom: 91.17%;
+
+/* Gray 40 */
+background: #A3ADB2;
+border-radius: 2px;
+
+
+/* Rectangle 11 */
+
+position: absolute;
+left: 8.8%;
+right: 86.4%;
+top: 9.26%;
+bottom: 90.54%;
+
+/* Gray 40 */
+background: #A3ADB2;
+border-radius: 2px;
+
+
+/* Rectangle 12 */
+
+position: absolute;
+left: 8.8%;
+right: 86.4%;
+top: 9.89%;
+bottom: 89.9%;
+
+/* Gray 40 */
+background: #A3ADB2;
+border-radius: 2px;
 
 
 /* Bars / Status Bar / iPhone / Light */
@@ -769,6 +1044,28 @@ color: #000000;
 
 
 
+/* 25 Minutes remaining */
+
+position: absolute;
+width: 0px;
+height: 130.21px;
+left: 299px;
+top: 451px;
+
+font-family: 'Adobe Blank';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 16px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
+transform: rotate(-53.75deg);
+
+
 /* Fuzzle */
 
 position: absolute;
@@ -780,9 +1077,9 @@ top: 22px;
 font-family: 'Maven Pro';
 font-style: normal;
 font-weight: 600;
-font-size: 30px;
+font-size: 24px;
 line-height: 13px;
-/* or 43% */
+/* or 54% */
 display: flex;
 align-items: center;
 text-align: center;
@@ -790,6 +1087,28 @@ text-align: center;
 color: #000000;
 
 text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+
+/* Ok, lets begin! */
+
+position: absolute;
+width: 145px;
+height: 13px;
+left: 111px;
+top: 535px;
+
+font-family: 'Maven Pro';
+font-style: normal;
+font-weight: 600;
+font-size: 21px;
+line-height: 13px;
+/* identical to box height, or 62% */
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #000000;
+
 
 
 /* btn / back */
@@ -836,18 +1155,6 @@ right: 48%;
 top: 84.73%;
 bottom: 3.82%;
 
-
-
-/* image 1 */
-
-position: absolute;
-width: 37px;
-height: 37px;
-left: 290px;
-top: 715px;
-
-background: url(image.png);
-opacity: 0.2;
 
 
 /* Remix Icons */
@@ -1088,177 +1395,20 @@ order: 1;
 flex-grow: 0;
 
 
-/* btn / back */
+/* 60 */
 
 position: absolute;
-width: 294px;
-height: 97px;
-left: 37px;
-top: 308px;
-
-
-
-/* button/normal */
-
-position: absolute;
-width: 294px;
-height: 97px;
-left: 37px;
-top: 308px;
-
-
-
-/* Rectangle 1 */
-
-position: absolute;
-left: 0%;
-right: 0%;
-top: 0%;
-bottom: 0%;
-
-background: #F0F0F3;
-box-shadow: -5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF;
-border-radius: 20px;
-
-
-/* framer */
-
-position: absolute;
-visibility: hidden;
-left: 25.51%;
-right: 25.51%;
-top: 25.51%;
-bottom: 25.51%;
-
-
-
-/* Rectangle 16 */
-
-box-sizing: border-box;
-
-position: absolute;
-visibility: hidden;
-width: 65.67px;
-height: 65.67px;
-left: 136.33px;
-top: 334.68px;
-
-/* Gray 40 */
-border: 2px solid #A3ADB2;
-transform: matrix(-0.95, -0.31, 0.95, -0.31, 0, 0);
-
-
-/* Group 33 */
-
-position: absolute;
-width: 176.4px;
-height: 58.2px;
-left: 95.8px;
-top: 327.4px;
-
-
-
-/* Vector */
-
-position: absolute;
-left: 25.55%;
-right: 27.41%;
-top: 40.32%;
-bottom: 52.51%;
-
-
-
-/* Points tally */
-
-position: absolute;
-width: 351px;
-height: 35px;
-left: -4px;
-top: 342px;
+width: 58px;
+height: 13px;
+left: 155px;
+top: 196px;
 
 font-family: 'Maven Pro';
 font-style: normal;
-font-weight: 500;
-font-size: 24px;
-line-height: 28px;
-text-align: center;
-
-color: #000000;
-
-
-
-/* btn / notification */
-
-position: absolute;
-width: 86px;
-height: 80px;
-left: 32px;
-top: 694px;
-
-filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-
-
-/* button/normal */
-
-position: absolute;
-width: 86px;
-height: 80px;
-left: 32px;
-top: 694px;
-
-border-radius: 50px;
-
-
-/* Rectangle 1 */
-
-position: absolute;
-left: 0%;
-right: 0%;
-top: 0%;
-bottom: 0%;
-
-background: #F0F0F3;
-box-shadow: -5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF;
-border-radius: 70px;
-
-
-/* framer */
-
-position: absolute;
-visibility: hidden;
-left: 25.51%;
-right: 25.51%;
-top: 25.51%;
-bottom: 25.51%;
-
-
-
-/* image 2 */
-
-position: absolute;
-width: 40px;
-height: 40px;
-left: 53px;
-top: 712px;
-
-background: url(image.png);
-opacity: 0.2;
-
-
-/* B didid */
-
-position: absolute;
-width: 0px;
-height: 16px;
-left: 83px;
-top: 361px;
-
-font-family: 'Adobe Blank';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-line-height: 16px;
-/* identical to box height */
+font-weight: 600;
+font-size: 45px;
+line-height: 13px;
+/* identical to box height, or 29% */
 display: flex;
 align-items: center;
 text-align: center;
@@ -1267,111 +1417,35 @@ color: #000000;
 
 
 
-/* btn / back */
+/* Minutes */
 
 position: absolute;
-width: 294px;
-height: 97px;
-left: 41px;
-top: 449px;
-
-
-
-/* button/normal */
-
-position: absolute;
-width: 294px;
-height: 97px;
-left: 41px;
-top: 449px;
-
-
-
-/* Rectangle 1 */
-
-position: absolute;
-left: 0%;
-right: 0%;
-top: 0%;
-bottom: 0%;
-
-background: #F0F0F3;
-box-shadow: -5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF;
-border-radius: 20px;
-
-
-/* framer */
-
-position: absolute;
-visibility: hidden;
-left: 25.51%;
-right: 25.51%;
-top: 25.51%;
-bottom: 25.51%;
-
-
-
-/* Rectangle 16 */
-
-box-sizing: border-box;
-
-position: absolute;
-visibility: hidden;
-width: 65.67px;
-height: 65.67px;
-left: 140.33px;
-top: 475.68px;
-
-/* Gray 40 */
-border: 2px solid #A3ADB2;
-transform: matrix(-0.95, -0.31, 0.95, -0.31, 0, 0);
-
-
-/* Group 33 */
-
-position: absolute;
-width: 176.4px;
-height: 58.2px;
-left: 99.8px;
-top: 468.4px;
-
-
-
-/* Vector */
-
-position: absolute;
-left: 26.61%;
-right: 26.35%;
-top: 57.68%;
-bottom: 35.15%;
-
-
-
-/* Veiw past sessions */
-
-position: absolute;
-width: 351px;
-height: 39px;
-left: 1px;
-top: 478px;
+width: 304px;
+height: 24px;
+left: 28px;
+top: 226px;
 
 font-family: 'Maven Pro';
 font-style: normal;
 font-weight: 500;
-font-size: 24px;
-line-height: 28px;
+font-size: 20px;
+line-height: 13px;
+/* or 65% */
+display: flex;
+align-items: center;
 text-align: center;
 
 color: #000000;
 
 
 
-/* 3950A827-4E28-4559-92A7-542789412A0A 1 */
+/* Ellipse 3 */
 
 position: absolute;
-width: 291px;
-height: 157px;
-left: 110px;
-top: 94px;
+width: 49px;
+height: 49px;
+left: 70px;
+top: 277px;
 
-background: url(3950A827-4E28-4559-92A7-542789412A0A.png);
+background: #FFFFFF;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
