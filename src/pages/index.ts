@@ -9,3 +9,4 @@ export { EndEarlyConfirmScreen } from "./EndEarlyConfirmScreen";
 export { StudyLogsScreen } from "./StudyLogsScreen";
 export { StudyTimerScreen } from "./StudyTimerScreen";
 export { StudySessionScreen } from "./StudySessionScreen";
+export { SessionCompleteScreen } from "./SessionCompleteScreen";

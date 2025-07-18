@@ -7,12 +7,21 @@ import {
   Platform,
   StatusBar,
   Image,
+  Modal,
+  TextInput,
+  KeyboardAvoidingView,
+  Alert,
 } from "react-native";
+import { supabase } from "@/services";
 
 interface EndEarlyConfirmScreenProps {
   /** Remaining seconds in the session when user pressed End Early */
   remainingSeconds: number;
-  /** Confirm with points – implementation deferred */
+  /** Supabase session row id – required for updating points */
+  sessionId: string;
+  /** Current authenticated user id (child) */
+  userId: string;
+  /** Invoke after successfully allocating points so parent can navigate */
   onConfirmWithPoints: () => void;
   /** Confirm with no points – implementation deferred */
   onConfirmWithoutPoints: () => void;
@@ -24,6 +33,8 @@ interface EndEarlyConfirmScreenProps {
 
 export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
   remainingSeconds: _remainingSeconds,
+  sessionId,
+  userId,
   onConfirmWithPoints,
   onConfirmWithoutPoints,
   onCancel,
@@ -166,6 +177,77 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
     },
   });
 
+  // ---------------------------------------------------------------------
+  // Local modal state
+  // ---------------------------------------------------------------------
+  const [pointsModalVisible, setPointsModalVisible] = React.useState(false);
+  const [pointsInput, setPointsInput] = React.useState("");
+  const [submitting, setSubmitting] = React.useState(false);
+
+  const handleAllocatePoints = async () => {
+    const parsed = parseInt(pointsInput, 10);
+    if (Number.isNaN(parsed) || parsed < 0) {
+      Alert.alert("Invalid input", "Enter a valid positive number");
+      return;
+    }
+
+    const dbEnabled = Boolean(userId && sessionId);
+
+    if (!dbEnabled) {
+      // Offline / placeholder mode — skip DB writes, go straight to next screen
+      setPointsModalVisible(false);
+      onConfirmWithPoints();
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      // Upsert into points table
+      const { data: existing, error } = await supabase
+        .from("points")
+        .select("*")
+        .eq("user_id", userId)
+        .single();
+
+      if (error && error.code !== "PGRST116") throw error;
+
+      if (existing) {
+        const updatedTotal = (existing.total_points ?? 0) + parsed;
+        const { error: updErr } = await supabase
+          .from("points")
+          .update({
+            total_points: updatedTotal,
+            last_updated: new Date().toISOString(),
+          })
+          .eq("user_id", userId);
+        if (updErr) throw updErr;
+      } else {
+        const { error: insErr } = await supabase.from("points").insert({
+          user_id: userId,
+          total_points: parsed,
+          last_updated: new Date().toISOString(),
+        });
+        if (insErr) throw insErr;
+      }
+
+      // Update session row with points_earned & ended_early flag
+      const { error: sessErr } = await supabase
+        .from("sessions")
+        .update({ points_earned: parsed, ended_early: true })
+        .eq("id", sessionId);
+      if (sessErr) throw sessErr;
+
+      setPointsModalVisible(false);
+      onConfirmWithPoints();
+    } catch (err) {
+      console.error(err);
+      Alert.alert("Error", "Unable to save points. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#F0F0F3" />
@@ -192,7 +274,7 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
       <View style={styles.optionRow}>
         <TouchableOpacity
           style={styles.optionButton}
-          onPress={onConfirmWithPoints}
+          onPress={() => setPointsModalVisible(true)}
         >
           <Text style={styles.optionText}>Yes, and{"\n"}give points</Text>
         </TouchableOpacity>
@@ -207,6 +289,171 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
       <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
         <Text style={styles.cancelText}>Cancel</Text>
       </TouchableOpacity>
+
+      {/* Points allocation modal/overlay */}
+      {pointsModalVisible && (
+        Platform.OS === "web" ? (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.25)",
+              justifyContent: "center",
+              alignItems: "center",
+              paddingHorizontal: 24,
+            }}
+          >
+            {/** Re-use same content as native modal */}
+            <View
+              style={{
+                width: "100%",
+                maxWidth: 340,
+                borderRadius: 20,
+                backgroundColor: "#F0F0F3",
+                padding: 24,
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 22,
+                  fontWeight: "600",
+                  fontFamily: "MavenPro-SemiBold",
+                  color: "#000",
+                  marginBottom: 18,
+                  textAlign: "center",
+                }}
+              >
+                How many points should we award?
+              </Text>
+
+              <TextInput
+                style={{
+                  width: "100%",
+                  height: 56,
+                  borderRadius: 12,
+                  backgroundColor: "#F0F0F3",
+                  paddingHorizontal: 16,
+                  fontSize: 20,
+                  fontFamily: "MavenPro-Medium",
+                  color: "#000",
+                  marginBottom: 24,
+                }}
+                placeholder="Enter points"
+                placeholderTextColor="#A3ADB2"
+                keyboardType="number-pad"
+                value={pointsInput}
+                onChangeText={setPointsInput}
+              />
+
+              <TouchableOpacity
+                style={{
+                  width: "100%",
+                  height: 56,
+                  borderRadius: 28,
+                  backgroundColor: "#7859BB",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={handleAllocatePoints}
+                disabled={submitting}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: "#fff",
+                    fontFamily: "MavenPro-SemiBold",
+                  }}
+                >
+                  {submitting ? "Saving…" : "Confirm"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <Modal transparent animationType="fade" visible>
+            <KeyboardAvoidingView
+              style={{
+                flex: 1,
+                backgroundColor: "rgba(0,0,0,0.25)",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingHorizontal: 24,
+              }}
+              behavior={Platform.OS === "ios" ? "padding" : undefined}
+            >
+              <View
+                style={{
+                  width: "100%",
+                  maxWidth: 340,
+                  borderRadius: 20,
+                  backgroundColor: "#F0F0F3",
+                  padding: 24,
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 22,
+                    fontWeight: "600",
+                    fontFamily: "MavenPro-SemiBold",
+                    color: "#000",
+                    marginBottom: 18,
+                    textAlign: "center",
+                  }}
+                >
+                  How many points should we award?
+                </Text>
+
+                <TextInput
+                  style={{
+                    width: "100%",
+                    height: 56,
+                    borderRadius: 12,
+                    backgroundColor: "#F0F0F3",
+                    paddingHorizontal: 16,
+                    fontSize: 20,
+                    fontFamily: "MavenPro-Medium",
+                    color: "#000",
+                    marginBottom: 24,
+                  }}
+                  placeholder="Enter points"
+                  placeholderTextColor="#A3ADB2"
+                  keyboardType="number-pad"
+                  value={pointsInput}
+                  onChangeText={setPointsInput}
+                />
+
+                <TouchableOpacity
+                  style={{
+                    width: "100%",
+                    height: 56,
+                    borderRadius: 28,
+                    backgroundColor: "#7859BB",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  onPress={handleAllocatePoints}
+                  disabled={submitting}
+                >
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      color: "#fff",
+                      fontFamily: "MavenPro-SemiBold",
+                    }}
+                  >
+                    {submitting ? "Saving…" : "Confirm"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </KeyboardAvoidingView>
+          </Modal>
+        )
+      )}
     </View>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as Font from "expo-font";
+import { supabase, databaseService } from "@/services";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import { Button, ErrorBoundary } from "@/components";
 import {
@@ -13,6 +14,7 @@ import {
   StudyTimerScreen,
   StudySessionScreen,
   EndEarlyConfirmScreen,
+  SessionCompleteScreen,
 } from "@/pages";
 
 // Define screen types for navigation
@@ -24,7 +26,8 @@ type ScreenType =
   | "sessions"
   | "timer"
   | "inProgress"
-  | "confirmEnd";
+  | "confirmEnd"
+  | "sessionComplete";
 
 /**
  * Main AppContent component
@@ -36,6 +39,8 @@ const AppContent: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState<ScreenType>("loading");
   const [activeSessionMinutes, setActiveSessionMinutes] = useState<number>(0);
   const [remainingSeconds, setRemainingSeconds] = useState<number>(0);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   // Load fonts on component mount
@@ -48,6 +53,24 @@ const AppContent: React.FC = () => {
       "MavenPro-ExtraBold": require("../assets/fonts/MavenPro-ExtraBold.ttf"),
       "MavenPro-Black": require("../assets/fonts/MavenPro-Black.ttf"),
     }).then(() => setFontsLoaded(true));
+  }, []);
+
+  // Fetch authenticated user ID once
+  useEffect(() => {
+    (async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          setUserId(user.id);
+        } else {
+          console.warn("No authenticated user found – userId null");
+        }
+      } catch (err) {
+        console.error("Unable to fetch user", err);
+      }
+    })();
   }, []);
 
   // Handler to switch screens
@@ -113,10 +136,37 @@ const AppContent: React.FC = () => {
     <StudyTimerScreen
       onNavigateBack={() => navigateToScreen("home")}
       onStartSession={(minutes: number) => {
-        console.log(`Starting ${minutes} minute session`);
-        setActiveSessionMinutes(minutes);
-        setRemainingSeconds(minutes * 60);
-        navigateToScreen("inProgress");
+        // Wrap DB side-effects in an async IIFE so we don’t violate the
+        // (minutes) => void type expected by StudyTimerScreen props.
+        (async () => {
+          try {
+            setActiveSessionMinutes(minutes);
+            setRemainingSeconds(minutes * 60);
+
+            // Create session row if authenticated
+            if (userId) {
+              const session = await databaseService.createSession({
+                user_id: userId,
+                duration_minutes: minutes,
+                breaks_taken: 0,
+                hints_given: 0,
+                distractions: 0,
+                points_earned: 0,
+                ended_early: false,
+              });
+              setSessionId(session.id);
+            }
+
+            // If we did not create a DB session, generate a temporary one so UI works
+            if (!sessionId) {
+              setSessionId(`temp-${Date.now()}`);
+            }
+
+            navigateToScreen("inProgress");
+          } catch (err) {
+            console.error("Failed to create session", err);
+          }
+        })();
       }}
     />
   );
@@ -137,10 +187,21 @@ const AppContent: React.FC = () => {
   const renderEndEarlyConfirmScreen = () => (
     <EndEarlyConfirmScreen
       remainingSeconds={remainingSeconds}
-      onConfirmWithPoints={() => navigateToScreen("home")}
+      sessionId={sessionId ?? ""}
+      userId={userId ?? ""}
+      onConfirmWithPoints={() => navigateToScreen("sessionComplete")}
       onConfirmWithoutPoints={() => navigateToScreen("home")}
       onCancel={() => navigateToScreen("inProgress")}
       onNavigateBack={() => navigateToScreen("inProgress")}
+    />
+  );
+
+  const renderSessionCompleteScreen = () => (
+    <SessionCompleteScreen
+      sessionId={sessionId ?? ""}
+      userId={userId ?? ""}
+      onNavigateBack={() => navigateToScreen("home")}
+      onDone={() => navigateToScreen("home")}
     />
   );
 
@@ -163,6 +224,8 @@ const AppContent: React.FC = () => {
         return renderStudySessionInProgressScreen();
       case "confirmEnd":
         return renderEndEarlyConfirmScreen();
+      case "sessionComplete":
+        return renderSessionCompleteScreen();
       default:
         return renderHomeScreen();
     }
