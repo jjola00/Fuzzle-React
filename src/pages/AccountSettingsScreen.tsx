@@ -337,7 +337,7 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({
       color: "#000000",
       fontFamily: "MavenPro-Regular",
       flex: 1,
-      maxWidth: 200, // Limit width to prevent overlap with cat2.png
+      maxWidth: 200, 
       backgroundColor: "#FFFFFF",
       padding: 8,
       borderRadius: 8,
@@ -494,7 +494,7 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({
           {renderErrorMessage(errors.childDob)}
 
           <Image
-            source={require("../../assets/cat1.png")}
+            source={require("../../assets/childCat.png")}
             style={styles.childCatImage}
             resizeMode="contain"
           />
@@ -610,7 +610,7 @@ export const AccountSettingsScreen: React.FC<AccountSettingsScreenProps> = ({
           {renderErrorMessage(errors.parentPhone)}
 
           <Image
-            source={require("../../assets/cat2.png")}
+            source={require("../../assets/parentCat.png")}
             style={styles.parentCatImage}
             resizeMode="contain"
           />

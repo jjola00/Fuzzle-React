@@ -15,7 +15,7 @@ interface StudySessionsScreenProps {
  * Shows session duration, breaks taken, and whether sessions ended early
  * Follows the design provided in the mockup with neomorphism styling
  */
-export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
+export const StudyLogsScreen: React.FC<StudySessionsScreenProps> = ({
   onNavigateBack,
 }) => {
   const { theme } = useTheme();
@@ -27,8 +27,13 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
 
   const ITEMS_PER_PAGE = 5;
 
+  // Fetch initial sessions on component mount
+  useEffect(() => {
+    loadSessions(0, true);
+  }, []);
+
   // Load sessions with pagination
-  const loadSessions = React.useCallback(async (page: number, isInitialLoad: boolean = false) => {
+  const loadSessions = async (page: number, isInitialLoad: boolean = false) => {
     const offset = page * ITEMS_PER_PAGE;
     
     if (isInitialLoad) {

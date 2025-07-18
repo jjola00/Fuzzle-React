@@ -172,7 +172,7 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
       </View>
 
       <Image
-        source={require("../../assets/cat5.png")}
+        source={require("../../assets/sadCat.png")}
         style={styles.catImage}
         resizeMode="contain"
       />
