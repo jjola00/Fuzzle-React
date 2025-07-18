@@ -1,163 +1,263 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
-import { useTheme } from "@/contexts/ThemeContext";
-import { useAsyncState } from "@/hooks/useAsyncState";
-import { Button } from "@/components";
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Platform, Image } from "react-native";
 
 // Props interface for HomeScreen
 interface HomeScreenProps {
   onNavigateToSettings: () => void;
   onNavigateToSessions: () => void;
+  onNavigateToTimer: () => void;
 }
 
 /**
- * HomeScreen component demonstrating page structure
- * Shows proper use of hooks, context, and component composition
- * Follows the suggested folder layout from requirements
+ * HomeScreen component implementing the final design
+ * Features the Fuzzle app with neomorphism styling
+ * Shows main navigation buttons as per the design mockup
  */
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateToSettings,
   onNavigateToSessions,
+  onNavigateToTimer,
 }) => {
-  const { theme } = useTheme();
-  const { state, execute } = useAsyncState<string>();
+  // Handle start new session button press
+  const handleStartNewSession = () => {
+    console.log("Start new session pressed");
+    onNavigateToTimer();
+  };
 
-  // Debug log to ensure component is rendering
+  // Handle points tally button press
+  const handlePointsTally = () => {
+    console.log("Points tally pressed");
+    // TODO: Implement navigation to points tally screen
+  };
 
-  if (__DEV__) {
-    console.log("HomeScreen rendering with theme:", theme);
-  }
-
-  /**
-   * Simulates an async operation for demonstration
-   * Shows how to use the custom useAsyncState hook
-   */
-  const handleAsyncOperation = async () => {
-    await execute(async () => {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      return "Async operation completed successfully!";
-    });
+  // Handle help button press
+  const handleHelp = () => {
+    console.log("Help pressed");
+    // TODO: Implement help functionality
   };
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.colors.background,
+      backgroundColor: "#F0F0F3",
     },
     content: {
-      padding: theme.spacing.lg,
+      flex: 1,
+      paddingHorizontal: 33,
+      paddingTop: Platform.OS === "ios" ? 70 : 40,
     },
     title: {
+      fontSize: 30,
+      fontWeight: "600",
+      color: "#000000",
+      textAlign: "center",
+      marginBottom: 100,
+      fontFamily: "MavenPro-SemiBold",
+      userSelect: "none",
+      // Conditional shadow styling for web vs native
+      ...(Platform.OS === "web"
+        ? { textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }
+        : {
+            textShadowColor: "rgba(0, 0, 0, 0.25)",
+            textShadowOffset: { width: 0, height: 4 },
+            textShadowRadius: 4,
+          }),
+    },
+    startSessionContainer: {
+      alignItems: "center",
+      marginBottom: 30,
+      position: "relative",
+    },
+    catImage: {
+      width: 240,
+      height: 200,
+    },
+    startSessionButton: {
+      width: 294, 
+      height: 98, 
+      borderRadius: 20,
+      backgroundColor: "#F0F0F3",
+      justifyContent: "center",
+      alignItems: "center",
+      alignSelf: "center",
+      // Web requires boxShadow instead of individual shadow properties
+      boxShadow:
+        Platform.OS === "web"
+          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF"
+          : undefined,
+      // Fallback shadows for native platforms
+      shadowColor: Platform.OS !== "web" ? "#000" : undefined,
+      shadowOffset: Platform.OS !== "web" ? { width: 0, height: 2 } : undefined,
+      shadowOpacity: Platform.OS !== "web" ? 0.1 : undefined,
+      shadowRadius: Platform.OS !== "web" ? 4 : undefined,
+      elevation: Platform.OS === "android" ? 3 : 0,
+    },
+    mainButton: {
+      width: 294,
+      height: 98,
+      borderRadius: 20,
+      backgroundColor: "#F0F0F3",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 30,
+      alignSelf: "center",
+      // Web requires boxShadow instead of individual shadow properties
+      boxShadow:
+        Platform.OS === "web"
+          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF"
+          : undefined,
+      // Fallback shadows for native platforms
+      shadowColor: Platform.OS !== "web" ? "#000" : undefined,
+      shadowOffset: Platform.OS !== "web" ? { width: 0, height: 2 } : undefined,
+      shadowOpacity: Platform.OS !== "web" ? 0.1 : undefined,
+      shadowRadius: Platform.OS !== "web" ? 4 : undefined,
+      elevation: Platform.OS === "android" ? 3 : 0,
+    },
+    mainButtonText: {
       fontSize: 24,
-      fontWeight: "600",
-      color: theme.colors.text,
-      marginBottom: theme.spacing.md,
-      userSelect: "none", // Prevent text selection on web
+      fontWeight: "500",
+      color: "#000000",
+      textAlign: "center",
+      fontFamily: "MavenPro-Medium",
+      userSelect: "none",
     },
-    description: {
-      fontSize: 16,
-      color: theme.colors.textSecondary,
-      marginBottom: theme.spacing.lg,
-      lineHeight: 24,
-      userSelect: "none", // Prevent text selection on web
+    startSessionText: {
+      fontSize: 24,
+      fontWeight: "500",
+      color: "#000000",
+      textAlign: "center",
+      fontFamily: "MavenPro-Medium",
+      userSelect: "none",
     },
-    section: {
-      marginBottom: theme.spacing.xl,
+    bottomButtons: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      paddingHorizontal: 32,
+      paddingBottom: Platform.OS === "ios" ? 40 : 20,
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
     },
-    sectionTitle: {
-      fontSize: 18,
-      fontWeight: "600",
-      color: theme.colors.text,
-      marginBottom: theme.spacing.sm,
-      userSelect: "none", // Prevent text selection on web
+    circularButton: {
+      width: 86,
+      height: 80,
+      borderRadius: 70,
+      backgroundColor: "#F0F0F3",
+      justifyContent: "center",
+      alignItems: "center",
+      // Web requires boxShadow instead of individual shadow properties
+      boxShadow:
+        Platform.OS === "web"
+          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF"
+          : undefined,
+      // Fallback shadows for native platforms
+      shadowColor: Platform.OS !== "web" ? "#000" : undefined,
+      shadowOffset: Platform.OS !== "web" ? { width: 0, height: 2 } : undefined,
+      shadowOpacity: Platform.OS !== "web" ? 0.1 : undefined,
+      shadowRadius: Platform.OS !== "web" ? 4 : undefined,
+      elevation: Platform.OS === "android" ? 3 : 0,
     },
-    result: {
-      padding: theme.spacing.md,
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.md,
-      marginTop: theme.spacing.md,
-    },
-    resultText: {
-      fontSize: 14,
-      color: theme.colors.text,
-      userSelect: "none", // Prevent text selection on web
-    },
-    errorText: {
-      fontSize: 14,
-      color: theme.colors.error,
-      userSelect: "none", // Prevent text selection on web
-    },
-    settingsSection: {
-      marginTop: theme.spacing.xl,
-      paddingTop: theme.spacing.lg,
-      borderTopWidth: 1,
-      borderTopColor: theme.colors.surface,
+    circularButtonText: {
+      fontSize: 24,
+      color: "#A3ADB2",
+      fontWeight: "400",
+      userSelect: "none",
     },
   });
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F0F0F3" />
+      
       <View style={styles.content}>
         <Text style={styles.title} selectable={false}>
-          Home Screen
+          Fuzzle
         </Text>
 
-        <Text style={styles.description} selectable={false}>
-          This is an example page component demonstrating the folder structure
-          and component composition patterns outlined in the project
-          requirements.
-        </Text>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle} selectable={false}>
-            Async State Demo
-          </Text>
-          <Button
-            title="Run Async Operation"
-            variant="primary"
-            loading={state.loading}
-            onPress={handleAsyncOperation}
-            testID="async-button"
-          />
-
-          {state.data && (
-            <View style={styles.result}>
-              <Text style={styles.resultText} selectable={false}>
-                {state.data}
-              </Text>
-            </View>
-          )}
-
-          {state.error && (
-            <View style={styles.result}>
-              <Text style={styles.errorText} selectable={false}>
-                Error: {state.error}
-              </Text>
-            </View>
-          )}
-        </View>
-
-        <View style={styles.settingsSection}>
-          <Text style={styles.sectionTitle} selectable={false}>
-            Navigation
-          </Text>
-          <Button
-            title="Go to Settings"
-            variant="secondary"
-            onPress={onNavigateToSettings}
-            testID="settings-button"
-          />
-          <View style={{ marginTop: theme.spacing.sm }}>
-            <Button
-              title="View past sessions"
-              variant="primary"
-              onPress={onNavigateToSessions}
-              testID="sessions-button"
+        <View style={styles.startSessionContainer}>
+          <TouchableOpacity
+            onPress={handleStartNewSession}
+            activeOpacity={0.8}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Start new session"
+            style={{ position: 'absolute', top: -110, right: 10, zIndex: 2 }}
+          >
+            <Image
+              source={require("../../assets/cat3.png")}
+              style={styles.catImage}
+              resizeMode="contain"
             />
-          </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.startSessionButton}
+            onPress={handleStartNewSession}
+            activeOpacity={0.8}
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Start new session"
+          >
+            <Text style={styles.startSessionText} selectable={false}>
+              Start new session
+            </Text>
+          </TouchableOpacity>
         </View>
+
+        <TouchableOpacity
+          style={styles.mainButton}
+          onPress={handlePointsTally}
+          activeOpacity={0.8}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Points tally"
+        >
+          <Text style={styles.mainButtonText} selectable={false}>
+            Points tally
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.mainButton}
+          onPress={onNavigateToSessions}
+          activeOpacity={0.8}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="View past sessions"
+        >
+          <Text style={styles.mainButtonText} selectable={false}>
+            View past sessions
+          </Text>
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+
+      <View style={styles.bottomButtons}>
+        <TouchableOpacity
+          style={styles.circularButton}
+          onPress={handleHelp}
+          activeOpacity={0.8}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Help"
+        >
+          <Text style={styles.circularButtonText} selectable={false}>
+            ?
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.circularButton}
+          onPress={onNavigateToSettings}
+          activeOpacity={0.8}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Settings"
+        >
+          <Text style={styles.circularButtonText} selectable={false}>
+            ⚙
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };

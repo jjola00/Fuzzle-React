@@ -10,10 +10,21 @@ import {
   SettingsScreen,
   AccountSettingsScreen,
   StudySessionsScreen,
+  StudySessionTimerScreen,
+  StudySessionInProgressScreen,
+  EndEarlyConfirmScreen,
 } from "@/pages";
 
 // Define screen types for navigation
-type ScreenType = "loading" | "home" | "settings" | "account" | "sessions";
+type ScreenType =
+  | "loading"
+  | "home"
+  | "settings"
+  | "account"
+  | "sessions"
+  | "timer"
+  | "inProgress"
+  | "confirmEnd";
 
 /**
  * Main AppContent component
@@ -23,6 +34,8 @@ type ScreenType = "loading" | "home" | "settings" | "account" | "sessions";
 const AppContent: React.FC = () => {
   const { theme, isDarkMode } = useTheme();
   const [currentScreen, setCurrentScreen] = useState<ScreenType>("loading");
+  const [activeSessionMinutes, setActiveSessionMinutes] = useState<number>(0);
+  const [remainingSeconds, setRemainingSeconds] = useState<number>(0);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   // Load fonts on component mount
@@ -66,6 +79,97 @@ const AppContent: React.FC = () => {
     </>
   );
 
+  // Render HomeScreen with navigation callbacks
+  const renderHomeScreen = () => (
+    <HomeScreen
+      onNavigateToSettings={() => navigateToScreen("settings")}
+      onNavigateToSessions={() => navigateToScreen("sessions")}
+      onNavigateToTimer={() => navigateToScreen("timer")}
+    />
+  );
+
+  // Render SettingsScreen with navigation callbacks
+  const renderSettingsScreen = () => (
+    <SettingsScreen
+      onNavigateBack={() => navigateToScreen("home")}
+      onNavigateToAccount={() => navigateToScreen("account")}
+    />
+  );
+
+  // Render AccountSettingsScreen with navigation callback
+  const renderAccountSettingsScreen = () => (
+    <AccountSettingsScreen
+      onNavigateBack={() => navigateToScreen("settings")}
+    />
+  );
+
+  // Render StudySessionsScreen with navigation callback
+  const renderStudySessionsScreen = () => (
+    <StudySessionsScreen
+      onNavigateBack={() => navigateToScreen("home")}
+    />
+  );
+
+  // Render StudySessionTimerScreen with navigation callbacks
+  const renderStudySessionTimerScreen = () => (
+    <StudySessionTimerScreen
+      onNavigateBack={() => navigateToScreen("home")}
+      onStartSession={(minutes: number) => {
+        console.log(`Starting ${minutes} minute session`);
+        setActiveSessionMinutes(minutes);
+        setRemainingSeconds(minutes * 60);
+        navigateToScreen("inProgress");
+      }}
+    />
+  );
+
+  // Render active study session screen
+  const renderStudySessionInProgressScreen = () => (
+    <StudySessionInProgressScreen
+      totalMinutes={activeSessionMinutes}
+      onEndSession={() => navigateToScreen("home")}
+      initialRemainingSeconds={remainingSeconds}
+      onRequestEndEarly={(secs) => {
+        setRemainingSeconds(secs);
+        navigateToScreen("confirmEnd");
+      }}
+    />
+  );
+
+  const renderEndEarlyConfirmScreen = () => (
+    <EndEarlyConfirmScreen
+      remainingSeconds={remainingSeconds}
+      onConfirmWithPoints={() => navigateToScreen("home")}
+      onConfirmWithoutPoints={() => navigateToScreen("home")}
+      onCancel={() => navigateToScreen("inProgress")}
+      onNavigateBack={() => navigateToScreen("inProgress")}
+    />
+  );
+
+  // Render appropriate screen based on current state
+  const renderScreen = () => {
+    switch (currentScreen) {
+      case "loading":
+        return renderLoadingScreen();
+      case "home":
+        return renderHomeScreen();
+      case "settings":
+        return renderSettingsScreen();
+      case "account":
+        return renderAccountSettingsScreen();
+      case "sessions":
+        return renderStudySessionsScreen();
+      case "timer":
+        return renderStudySessionTimerScreen();
+      case "inProgress":
+        return renderStudySessionInProgressScreen();
+      case "confirmEnd":
+        return renderEndEarlyConfirmScreen();
+      default:
+        return renderHomeScreen();
+    }
+  };
+
   return (
     <View
       style={{
@@ -74,29 +178,7 @@ const AppContent: React.FC = () => {
       }}
     >
       <StatusBar style={isDarkMode ? "light" : "dark"} />
-      {currentScreen === "loading" && renderLoadingScreen()}
-      {currentScreen === "home" && (
-        <HomeScreen 
-          onNavigateToSettings={() => navigateToScreen("settings")}
-          onNavigateToSessions={() => navigateToScreen("sessions")}
-        />
-      )}
-      {currentScreen === "settings" && (
-        <SettingsScreen
-          onNavigateBack={() => navigateToScreen("home")}
-          onNavigateToAccount={() => navigateToScreen("account")}
-        />
-      )}
-      {currentScreen === "account" && (
-        <AccountSettingsScreen
-          onNavigateBack={() => navigateToScreen("settings")}
-        />
-      )}
-      {currentScreen === "sessions" && (
-        <StudySessionsScreen
-          onNavigateBack={() => navigateToScreen("home")}
-        />
-      )}
+      {renderScreen()}
     </View>
   );
 };
