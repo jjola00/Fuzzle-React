@@ -1,4 +1,4 @@
-/* setting timer */
+/* timer 2 */
 
 position: relative;
 width: 375px;
@@ -12,8 +12,8 @@ background: #F0F0F3;
 position: absolute;
 width: 279px;
 height: 64px;
-left: 46px;
-top: 510px;
+left: 42px;
+top: 506px;
 
 
 
@@ -22,8 +22,8 @@ top: 510px;
 position: absolute;
 width: 279px;
 height: 64px;
-left: 46px;
-top: 510px;
+left: 42px;
+top: 506px;
 
 
 
@@ -59,8 +59,8 @@ position: absolute;
 visibility: hidden;
 width: 60.72px;
 height: 60.72px;
-left: 140.27px;
-top: 527.6px;
+left: 136.27px;
+top: 523.6px;
 
 /* Gray 40 */
 border: 2px solid #A3ADB2;
@@ -72,18 +72,18 @@ transform: matrix(-0.97, -0.22, 0.97, -0.22, 0, 0);
 position: absolute;
 width: 167.4px;
 height: 38.4px;
-left: 101.8px;
-top: 522.8px;
+left: 97.8px;
+top: 518.8px;
 
 
 
 /* Vector */
 
 position: absolute;
-left: 27.15%;
-right: 28.21%;
-top: 64.38%;
-bottom: 30.89%;
+left: 26.08%;
+right: 29.28%;
+top: 63.89%;
+bottom: 31.38%;
 
 
 
@@ -1089,13 +1089,13 @@ color: #000000;
 text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
 
-/* Ok, lets begin! */
+/* End early */
 
 position: absolute;
-width: 145px;
+width: 94px;
 height: 13px;
-left: 111px;
-top: 535px;
+left: 135px;
+top: 531px;
 
 font-family: 'Maven Pro';
 font-style: normal;
@@ -1395,13 +1395,13 @@ order: 1;
 flex-grow: 0;
 
 
-/* 60 */
+/* 55 */
 
 position: absolute;
-width: 58px;
+width: 53px;
 height: 13px;
 left: 155px;
-top: 196px;
+top: 167px;
 
 font-family: 'Maven Pro';
 font-style: normal;
@@ -1417,20 +1417,20 @@ color: #000000;
 
 
 
-/* Minutes */
+/* Minutes remaining */
 
 position: absolute;
 width: 304px;
 height: 24px;
-left: 28px;
-top: 226px;
+left: 30px;
+top: 207px;
 
 font-family: 'Maven Pro';
 font-style: normal;
 font-weight: 500;
-font-size: 20px;
+font-size: 18px;
 line-height: 13px;
-/* or 65% */
+/* or 72% */
 display: flex;
 align-items: center;
 text-align: center;
@@ -1439,13 +1439,12 @@ color: #000000;
 
 
 
-/* Ellipse 3 */
+/* backcat 1 */
 
 position: absolute;
-width: 49px;
-height: 49px;
-left: 70px;
-top: 277px;
+width: 133px;
+height: 133px;
+left: 115px;
+top: 211px;
 
-background: #FFFFFF;
-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+background: url(backcat);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Platform, PanResponder } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
@@ -26,36 +26,49 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
   const CIRCLE_RADIUS = 118; // Half of 236px
   const CENTER_X = 118; // Center of SVG viewBox
   const CENTER_Y = 118; // Center of SVG viewBox
-  const SLIDER_RADIUS = 28; // Half of 49px slider size
+  const SLIDER_RADIUS = 18; // SVG knob radius; keeps its outer edge flush with the container, outside the purple ring
 
-  // Handle touch events for dragging the slider
+  // Refs to track rotation without causing extra re-renders
+  const rotationRef = useRef<number>(((60 - MIN_MINUTES) / (MAX_MINUTES - MIN_MINUTES)) * 360); // initial 60 minutes
+  const prevAngleRef = useRef<number>(0);
+
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: () => true,
-    onPanResponderGrant: () => true,
-    onPanResponderMove: (evt) => {
+    onPanResponderGrant: (evt) => {
       const { locationX, locationY } = evt.nativeEvent;
-      
-      // Calculate angle from touch position relative to circle center
       const dx = locationX - CENTER_X;
       const dy = locationY - CENTER_Y;
       let angle = Math.atan2(dy, dx) * (180 / Math.PI);
-      
-      // Normalize angle to 0-360 range
       if (angle < 0) angle += 360;
-      
-      // Convert to our coordinate system where 270 degrees = 12 o'clock (5 minutes)
-      // and we go clockwise for 360 degrees total
+      prevAngleRef.current = (angle + 90) % 360; // store instantaneous angle (0-360)
+    },
+    onPanResponderMove: (evt) => {
+      const { locationX, locationY } = evt.nativeEvent;
+
+      // Instantaneous angle relative to circle (0-360, where 0 = top/12 o’clock)
+      const dx = locationX - CENTER_X;
+      const dy = locationY - CENTER_Y;
+      let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      if (angle < 0) angle += 360;
       let normalizedAngle = (angle + 90) % 360;
-      
-      // Clamp to our valid range (0 to 360 degrees maps to 5 to 120 minutes)
-      // No clamping needed since we're using the full circle
-      
-      // Convert angle to minutes
-      const progress = normalizedAngle / 360;
+
+      // Calculate incremental change, accounting for crossing the 0/360 boundary
+      let delta = normalizedAngle - prevAngleRef.current;
+      if (delta > 180) delta -= 360;
+      if (delta < -180) delta += 360;
+
+      // Update total rotation and clamp between 0° and 360°
+      let newRotation = rotationRef.current + delta;
+      newRotation = Math.max(0, Math.min(360, newRotation));
+
+      // Persist for next move
+      rotationRef.current = newRotation;
+      prevAngleRef.current = normalizedAngle;
+
+      // Convert rotation to minutes and clamp
+      const progress = newRotation / 360;
       const minutes = Math.round((progress * (MAX_MINUTES - MIN_MINUTES) + MIN_MINUTES) / STEP) * STEP;
-      const clampedMinutes = Math.max(MIN_MINUTES, Math.min(MAX_MINUTES, minutes));
-      
-      setSelectedMinutes(clampedMinutes);
+      setSelectedMinutes(minutes);
     },
     onPanResponderRelease: () => {
       // Optional: Add haptic feedback here
@@ -353,7 +366,17 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
       <View style={styles.content}>
         <View style={styles.timerContainer}>
           <View style={styles.circleContainer} {...panResponder.panHandlers}>
-            {/* Progress circle background */}
+            {/* Main timer circle (rendered first, hence behind) */}
+            <View style={styles.circle}>
+              <Text style={styles.minutesNumber} selectable={false}>
+                {selectedMinutes}
+              </Text>
+              <Text style={styles.minutesLabel} selectable={false}>
+                Minutes
+              </Text>
+            </View>
+
+            {/* Progress ring and draggable knob */}
             <Svg style={styles.progressCircle} viewBox="0 0 236 236">
               <Circle
                 cx="118"
@@ -385,16 +408,6 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
                 filter="drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))"
               />
             </Svg>
-
-            {/* Main timer circle */}
-            <View style={styles.circle}>
-              <Text style={styles.minutesNumber} selectable={false}>
-                {selectedMinutes}
-              </Text>
-              <Text style={styles.minutesLabel} selectable={false}>
-                Minutes
-              </Text>
-            </View>
           </View>
 
           {/* Time adjustment controls */}
