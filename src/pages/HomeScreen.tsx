@@ -77,8 +77,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       zIndex: 2,
     },
     startSessionButton: {
-      width: 320, // Increased from 294
-      height: 120, // Increased from 98
+      width: 294, 
+      height: 98, 
       borderRadius: 20,
       backgroundColor: "#F0F0F3",
       justifyContent: "center",

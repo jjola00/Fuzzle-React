@@ -26,31 +26,7 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
   const CIRCLE_RADIUS = 118; // Half of 236px
   const CENTER_X = 118; // Center of SVG viewBox
   const CENTER_Y = 118; // Center of SVG viewBox
-  const SLIDER_RADIUS = 24.5; // Half of 49px slider size
-
-  // Calculate angle from minutes (0 degrees = 12 o'clock position)
-  const minutesToAngle = (minutes: number) => {
-    const progress = (minutes - MIN_MINUTES) / (MAX_MINUTES - MIN_MINUTES);
-    return (progress * 360) - 90; // -90 to start at 12 o'clock
-  };
-
-  // Calculate minutes from angle
-  const angleToMinutes = (angle: number) => {
-    let normalizedAngle = (angle + 90) % 360; // Normalize to 0-360, adjust for 12 o'clock start
-    if (normalizedAngle < 0) normalizedAngle += 360;
-    const progress = normalizedAngle / 360;
-    const minutes = Math.round((progress * (MAX_MINUTES - MIN_MINUTES) + MIN_MINUTES) / STEP) * STEP;
-    return Math.max(MIN_MINUTES, Math.min(MAX_MINUTES, minutes));
-  };
-
-  // Calculate slider position from angle
-  const getSliderPosition = (angle: number) => {
-    const rad = (angle * Math.PI) / 180;
-    return {
-      x: CENTER_X + (CIRCLE_RADIUS - SLIDER_RADIUS) * Math.cos(rad),
-      y: CENTER_Y + (CIRCLE_RADIUS - SLIDER_RADIUS) * Math.sin(rad),
-    };
-  };
+  const SLIDER_RADIUS = 28; // Half of 49px slider size
 
   // Handle touch events for dragging the slider
   const panResponder = PanResponder.create({
@@ -62,23 +38,55 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
       // Calculate angle from touch position relative to circle center
       const dx = locationX - CENTER_X;
       const dy = locationY - CENTER_Y;
-      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      let angle = Math.atan2(dy, dx) * (180 / Math.PI);
       
-      // Convert angle to minutes and update (this already includes min/max constraints)
-      const newMinutes = angleToMinutes(angle);
-      setSelectedMinutes(newMinutes);
+      // Normalize angle to 0-360 range
+      if (angle < 0) angle += 360;
+      
+      // Convert to our coordinate system where 270 degrees = 12 o'clock (5 minutes)
+      // and we go clockwise for 360 degrees total
+      let normalizedAngle = (angle + 90) % 360;
+      
+      // Clamp to our valid range (0 to 360 degrees maps to 5 to 120 minutes)
+      // No clamping needed since we're using the full circle
+      
+      // Convert angle to minutes
+      const progress = normalizedAngle / 360;
+      const minutes = Math.round((progress * (MAX_MINUTES - MIN_MINUTES) + MIN_MINUTES) / STEP) * STEP;
+      const clampedMinutes = Math.max(MIN_MINUTES, Math.min(MAX_MINUTES, minutes));
+      
+      setSelectedMinutes(clampedMinutes);
     },
     onPanResponderRelease: () => {
       // Optional: Add haptic feedback here
     },
   });
 
-  // Handle time adjustment with buttons
-  const adjustTime = (increment: boolean) => {
-    const newMinutes = increment 
-      ? Math.min(MAX_MINUTES, selectedMinutes + STEP)
-      : Math.max(MIN_MINUTES, selectedMinutes - STEP);
-    setSelectedMinutes(newMinutes);
+  // Calculate angle from minutes (0 degrees = 12 o'clock position)
+  const minutesToAngle = (minutes: number) => {
+    const progress = (minutes - MIN_MINUTES) / (MAX_MINUTES - MIN_MINUTES);
+    return (progress * 360) - 90; // -90 to start at 12 o'clock
+  };
+
+  // Calculate minutes from angle (simplified since we now clamp in PanResponder)
+  const angleToMinutes = (angle: number) => {
+    // Convert to progress (0 to 1)
+    const progress = (angle + 90) / 360;
+    
+    // Clamp progress to 0-1 range
+    const clampedProgress = Math.max(0, Math.min(1, progress));
+    
+    const minutes = Math.round((clampedProgress * (MAX_MINUTES - MIN_MINUTES) + MIN_MINUTES) / STEP) * STEP;
+    return Math.max(MIN_MINUTES, Math.min(MAX_MINUTES, minutes));
+  };
+
+  // Calculate slider position from angle
+  const getSliderPosition = (angle: number) => {
+    const rad = (angle * Math.PI) / 180;
+    return {
+      x: CENTER_X + (CIRCLE_RADIUS - SLIDER_RADIUS) * Math.cos(rad),
+      y: CENTER_Y + (CIRCLE_RADIUS - SLIDER_RADIUS) * Math.sin(rad),
+    };
   };
 
   // Handle menu button press
@@ -231,6 +239,35 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
       width: 236,
       height: 236,
     },
+    startButton: {
+      width: 279,
+      height: 64,
+      borderRadius: 20,
+      backgroundColor: "#F0F0F3",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 40,
+      alignSelf: "center",
+      // Web requires boxShadow instead of individual shadow properties
+      boxShadow:
+        Platform.OS === "web"
+          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF"
+          : undefined,
+      // Fallback shadows for native platforms
+      shadowColor: Platform.OS !== "web" ? "#000" : undefined,
+      shadowOffset: Platform.OS !== "web" ? { width: 0, height: 2 } : undefined,
+      shadowOpacity: Platform.OS !== "web" ? 0.1 : undefined,
+      shadowRadius: Platform.OS !== "web" ? 4 : undefined,
+      elevation: Platform.OS === "android" ? 3 : 0,
+    },
+    startButtonText: {
+      fontSize: 21,
+      fontWeight: "600",
+      color: "#000000",
+      textAlign: "center",
+      fontFamily: "MavenPro-SemiBold",
+      userSelect: "none",
+    },
     controls: {
       flexDirection: "row",
       justifyContent: "space-between",
@@ -261,35 +298,6 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
       fontSize: 24,
       color: "#A3ADB2",
       fontWeight: "400",
-      userSelect: "none",
-    },
-    startButton: {
-      width: 279,
-      height: 64,
-      borderRadius: 20,
-      backgroundColor: "#F0F0F3",
-      justifyContent: "center",
-      alignItems: "center",
-      marginBottom: 40,
-      alignSelf: "center",
-      // Web requires boxShadow instead of individual shadow properties
-      boxShadow:
-        Platform.OS === "web"
-          ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3), inset -2px -2px 4px rgba(0, 0, 0, 0.1), inset 2px 2px 4px #FFFFFF"
-          : undefined,
-      // Fallback shadows for native platforms
-      shadowColor: Platform.OS !== "web" ? "#000" : undefined,
-      shadowOffset: Platform.OS !== "web" ? { width: 0, height: 2 } : undefined,
-      shadowOpacity: Platform.OS !== "web" ? 0.1 : undefined,
-      shadowRadius: Platform.OS !== "web" ? 4 : undefined,
-      elevation: Platform.OS === "android" ? 3 : 0,
-    },
-    startButtonText: {
-      fontSize: 21,
-      fontWeight: "600",
-      color: "#000000",
-      textAlign: "center",
-      fontFamily: "MavenPro-SemiBold",
       userSelect: "none",
     },
   });
@@ -388,31 +396,7 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
 
           {/* Time adjustment controls */}
           <View style={styles.controls}>
-            <TouchableOpacity
-              style={styles.controlButton}
-              onPress={() => adjustTime(false)}
-              activeOpacity={0.8}
-              accessible={true}
-              accessibilityRole="button"
-              accessibilityLabel="Decrease time"
-            >
-              <Text style={styles.controlButtonText} selectable={false}>
-                -
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.controlButton}
-              onPress={() => adjustTime(true)}
-              activeOpacity={0.8}
-              accessible={true}
-              accessibilityRole="button"
-              accessibilityLabel="Increase time"
-            >
-              <Text style={styles.controlButtonText} selectable={false}>
-                +
-              </Text>
-            </TouchableOpacity>
+             
           </View>
         </View>
 

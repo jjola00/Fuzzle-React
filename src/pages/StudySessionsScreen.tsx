@@ -318,7 +318,7 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
         </TouchableOpacity>
         
         <Text style={styles.title} selectable={false}>
-          Past session log
+          Past sessions
         </Text>
       </View>
 
