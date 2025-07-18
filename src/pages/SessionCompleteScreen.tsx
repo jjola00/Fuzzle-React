@@ -34,6 +34,8 @@ export interface SessionCompleteScreenProps {
   onNavigateBack: () => void;
   /** Invoked after the user dismisses the screen via the “Okay!” button. */
   onDone: () => void;
+  /** Points earned, supplied if we navigated without DB row available */
+  earnedPoints?: number;
 }
 
 // ----------------------------------------------------------------------------
@@ -43,6 +45,7 @@ export interface SessionCompleteScreenProps {
 export const SessionCompleteScreen: React.FC<SessionCompleteScreenProps> = ({
   sessionId,
   userId: _userId,
+  earnedPoints,
   onNavigateBack,
   onDone,
 }) => {
@@ -79,7 +82,7 @@ export const SessionCompleteScreen: React.FC<SessionCompleteScreenProps> = ({
   const breaksTaken = session?.breaks_taken ?? 0;
   const hintsGiven = session?.hints_given ?? 0;
   const distractions = session?.distractions ?? 0;
-  const pointsEarned = session?.points_earned ?? 0;
+  const pointsEarned = session?.points_earned ?? earnedPoints ?? 0;
 
   // -------------------------------------------------------------------------
   // Styles
@@ -161,7 +164,7 @@ export const SessionCompleteScreen: React.FC<SessionCompleteScreenProps> = ({
     },
     headline: {
       fontSize: 24,
-      fontWeight: "600",
+      fontWeight: "500",
       fontFamily: "MavenPro-SemiBold",
       color: "#000",
       textAlign: "center",
@@ -184,7 +187,7 @@ export const SessionCompleteScreen: React.FC<SessionCompleteScreenProps> = ({
     },
     statsTextPrimary: {
       fontSize: 28,
-      fontWeight: "700",
+      fontWeight: "500",
       fontFamily: "MavenPro-SemiBold",
       textAlign: "center",
       color: "#000",

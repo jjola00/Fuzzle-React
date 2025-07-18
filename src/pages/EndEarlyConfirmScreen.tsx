@@ -21,8 +21,8 @@ interface EndEarlyConfirmScreenProps {
   sessionId: string;
   /** Current authenticated user id (child) */
   userId: string;
-  /** Invoke after successfully allocating points so parent can navigate */
-  onConfirmWithPoints: () => void;
+  /** Invoke after allocating points so parent can navigate; provides awarded amount */
+  onConfirmWithPoints: (awardedPoints: number) => void;
   /** Confirm with no points – implementation deferred */
   onConfirmWithoutPoints: () => void;
   /** Cancel and resume timer */
@@ -196,7 +196,7 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
     if (!dbEnabled) {
       // Offline / placeholder mode — skip DB writes, go straight to next screen
       setPointsModalVisible(false);
-      onConfirmWithPoints();
+      onConfirmWithPoints(parsed);
       return;
     }
 
@@ -239,7 +239,7 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
       if (sessErr) throw sessErr;
 
       setPointsModalVisible(false);
-      onConfirmWithPoints();
+      onConfirmWithPoints(parsed);
     } catch (err) {
       console.error(err);
       Alert.alert("Error", "Unable to save points. Please try again.");

@@ -41,6 +41,7 @@ const AppContent: React.FC = () => {
   const [remainingSeconds, setRemainingSeconds] = useState<number>(0);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  const [earnedPoints, setEarnedPoints] = useState<number>(0);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   // Load fonts on component mount
@@ -189,7 +190,10 @@ const AppContent: React.FC = () => {
       remainingSeconds={remainingSeconds}
       sessionId={sessionId ?? ""}
       userId={userId ?? ""}
-      onConfirmWithPoints={() => navigateToScreen("sessionComplete")}
+      onConfirmWithPoints={(pts: number) => {
+        setEarnedPoints(pts);
+        navigateToScreen("sessionComplete");
+      }}
       onConfirmWithoutPoints={() => navigateToScreen("home")}
       onCancel={() => navigateToScreen("inProgress")}
       onNavigateBack={() => navigateToScreen("inProgress")}
@@ -200,6 +204,7 @@ const AppContent: React.FC = () => {
     <SessionCompleteScreen
       sessionId={sessionId ?? ""}
       userId={userId ?? ""}
+      earnedPoints={earnedPoints}
       onNavigateBack={() => navigateToScreen("home")}
       onDone={() => navigateToScreen("home")}
     />
