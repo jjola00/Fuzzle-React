@@ -113,10 +113,10 @@ jobs:
           npx expo install --fix
 
       - name: Build preview for iOS
-        run: npx eas build --platform ios --profile preview --non-interactive
+        run: eas build --platform ios --profile preview --non-interactive
 
       - name: Build preview for Android
-        run: npx eas build --platform android --profile preview --non-interactive
+        run: eas build --platform android --profile preview --non-interactive
 
       - name: Comment PR with build info
         uses: actions/github-script@v6
@@ -160,10 +160,10 @@ jobs:
           npx expo install --fix
 
       - name: Build production for iOS
-        run: npx eas build --platform ios --profile production --non-interactive
+        run: eas build --platform ios --profile production --non-interactive
 
       - name: Build production for Android
-        run: npx eas build --platform android --profile production --non-interactive
+        run: eas build --platform android --profile production --non-interactive
 
       - name: Create GitHub Release
         uses: actions/create-release@v1
