@@ -22,11 +22,20 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
   const MAX_MINUTES = 120;
   const STEP = 5;
   
-  // Circle dimensions
-  const CIRCLE_RADIUS = 118; // Half of 236px
-  const CENTER_X = 118; // Center of SVG viewBox
-  const CENTER_Y = 118; // Center of SVG viewBox
-  const SLIDER_RADIUS = 18; // SVG knob radius; keeps its outer edge flush with the container, outside the purple ring
+  // Circle dimensions (enlarged)
+  const CIRCLE_CONTAINER_SIZE = 300;
+  const CIRCLE_RADIUS = CIRCLE_CONTAINER_SIZE / 2; // 150px
+  const CENTER_X = CIRCLE_RADIUS; // 150
+  const CENTER_Y = CIRCLE_RADIUS;
+
+  // Ring radii (mirror previous 13px margin and 5px gap between grey track and purple ring)
+  const PURPLE_RING_RADIUS = CIRCLE_RADIUS - 13; // 137
+  const GREY_TRACK_RADIUS = PURPLE_RING_RADIUS - 5; // 132
+
+  // Circumference used for strokeDasharray
+  const TRACK_CIRCUMFERENCE = 2 * Math.PI * PURPLE_RING_RADIUS; // ≈ 861
+ 
+  const SLIDER_RADIUS = 18; // knob size unchanged
 
   // Refs to track rotation without causing extra re-renders
   const rotationRef = useRef<number>(((60 - MIN_MINUTES) / (MAX_MINUTES - MIN_MINUTES)) * 360); // initial 60 minutes
@@ -190,15 +199,19 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
       textAlign: "center",
       fontFamily: "MavenPro-SemiBold",
       userSelect: "none",
-      textShadowColor: "rgba(0, 0, 0, 0.25)",
-      textShadowOffset: { width: 0, height: 4 },
-      textShadowRadius: 4,
+      ...(Platform.OS === "web"
+        ? { textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)" }
+        : {
+            textShadowColor: "rgba(0, 0, 0, 0.25)",
+            textShadowOffset: { width: 0, height: 4 },
+            textShadowRadius: 4,
+          }),
     },
     content: {
       flex: 1,
-      justifyContent: "center",
+      justifyContent: "flex-start", // place timer closer to top
       alignItems: "center",
-      paddingTop: 20,
+      paddingTop: 10,
     },
     timerContainer: {
       justifyContent: "center",
@@ -206,16 +219,16 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
       marginBottom: 60,
     },
     circleContainer: {
-      width: 236,
-      height: 236,
+      width: CIRCLE_CONTAINER_SIZE,
+      height: CIRCLE_CONTAINER_SIZE,
       justifyContent: "center",
       alignItems: "center",
       position: "relative",
     },
     circle: {
-      width: 200,
-      height: 200,
-      borderRadius: 100,
+      width: 250,
+      height: 250,
+      borderRadius: 125,
       backgroundColor: "#F0F0F3",
       justifyContent: "center",
       alignItems: "center",
@@ -252,8 +265,8 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
     },
     progressCircle: {
       position: "absolute",
-      width: 236,
-      height: 236,
+      width: CIRCLE_CONTAINER_SIZE,
+      height: CIRCLE_CONTAINER_SIZE,
     },
     startButton: {
       width: 279,
@@ -262,6 +275,7 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
       backgroundColor: "#F0F0F3",
       justifyContent: "center",
       alignItems: "center",
+      marginTop: 60,
       marginBottom: 40,
       alignSelf: "center",
       // Web requires boxShadow instead of individual shadow properties
@@ -377,26 +391,26 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
             </View>
 
             {/* Progress ring and draggable knob */}
-            <Svg style={styles.progressCircle} viewBox="0 0 236 236">
+            <Svg style={styles.progressCircle} viewBox={`0 0 ${CIRCLE_CONTAINER_SIZE} ${CIRCLE_CONTAINER_SIZE}`}> 
               <Circle
-                cx="118"
-                cy="118"
-                r="100"
+                cx={CENTER_X}
+                cy={CENTER_Y}
+                r={GREY_TRACK_RADIUS}
                 fill="none"
                 stroke="#000000"
                 strokeWidth="1"
                 opacity="0.1"
               />
               <Circle
-                cx="118"
-                cy="118"
-                r="105"
+                cx={CENTER_X}
+                cy={CENTER_Y}
+                r={PURPLE_RING_RADIUS}
                 fill="none"
                 stroke="#9281CD"
                 strokeWidth="2"
-                strokeDasharray={`${progress * 660} 660`}
+                strokeDasharray={`${progress * TRACK_CIRCUMFERENCE} ${TRACK_CIRCUMFERENCE}`}
                 strokeDashoffset="0"
-                transform="rotate(-90 118 118)"
+                transform={`rotate(-90 ${CENTER_X} ${CENTER_Y})`}
               />
               {/* Slider position indicator */}
               <Circle

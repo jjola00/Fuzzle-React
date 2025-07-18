@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import * as Font from "expo-font";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
@@ -11,10 +11,18 @@ import {
   AccountSettingsScreen,
   StudySessionsScreen,
   StudySessionTimerScreen,
+  StudySessionInProgressScreen,
 } from "@/pages";
 
 // Define screen types for navigation
-type ScreenType = "loading" | "home" | "settings" | "account" | "sessions" | "timer";
+type ScreenType =
+  | "loading"
+  | "home"
+  | "settings"
+  | "account"
+  | "sessions"
+  | "timer"
+  | "inProgress";
 
 /**
  * Main AppContent component
@@ -24,6 +32,7 @@ type ScreenType = "loading" | "home" | "settings" | "account" | "sessions" | "ti
 const AppContent: React.FC = () => {
   const { theme, isDarkMode } = useTheme();
   const [currentScreen, setCurrentScreen] = useState<ScreenType>("loading");
+  const [activeSessionMinutes, setActiveSessionMinutes] = useState<number>(0);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   // Load fonts on component mount
@@ -104,9 +113,17 @@ const AppContent: React.FC = () => {
       onNavigateBack={() => navigateToScreen("home")}
       onStartSession={(minutes: number) => {
         console.log(`Starting ${minutes} minute session`);
-        // TODO: Navigate to actual study session screen
-        navigateToScreen("home");
+        setActiveSessionMinutes(minutes);
+        navigateToScreen("inProgress");
       }}
+    />
+  );
+
+  // Render active study session screen
+  const renderStudySessionInProgressScreen = () => (
+    <StudySessionInProgressScreen
+      totalMinutes={activeSessionMinutes}
+      onEndSession={() => navigateToScreen("home")}
     />
   );
 
@@ -125,6 +142,8 @@ const AppContent: React.FC = () => {
         return renderStudySessionsScreen();
       case "timer":
         return renderStudySessionTimerScreen();
+      case "inProgress":
+        return renderStudySessionInProgressScreen();
       default:
         return renderHomeScreen();
     }
