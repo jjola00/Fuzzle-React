@@ -9,9 +9,9 @@ import {
   LoadingScreen,
   SettingsScreen,
   AccountSettingsScreen,
-  StudySessionsScreen,
-  StudySessionTimerScreen,
-  StudySessionInProgressScreen,
+  StudyLogsScreen,
+  StudyTimerScreen,
+  StudySessionScreen,
   EndEarlyConfirmScreen,
 } from "@/pages";
 
@@ -105,14 +105,14 @@ const AppContent: React.FC = () => {
 
   // Render StudySessionsScreen with navigation callback
   const renderStudySessionsScreen = () => (
-    <StudySessionsScreen
+    <StudyLogsScreen
       onNavigateBack={() => navigateToScreen("home")}
     />
   );
 
   // Render StudySessionTimerScreen with navigation callbacks
   const renderStudySessionTimerScreen = () => (
-    <StudySessionTimerScreen
+    <StudyTimerScreen
       onNavigateBack={() => navigateToScreen("home")}
       onStartSession={(minutes: number) => {
         console.log(`Starting ${minutes} minute session`);
@@ -125,11 +125,11 @@ const AppContent: React.FC = () => {
 
   // Render active study session screen
   const renderStudySessionInProgressScreen = () => (
-    <StudySessionInProgressScreen
+    <StudySessionScreen
       totalMinutes={activeSessionMinutes}
       onEndSession={() => navigateToScreen("home")}
       initialRemainingSeconds={remainingSeconds}
-      onRequestEndEarly={(secs) => {
+      onRequestEndEarly={(secs: number) => {
         setRemainingSeconds(secs);
         navigateToScreen("confirmEnd");
       }}

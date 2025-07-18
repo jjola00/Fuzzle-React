@@ -185,7 +185,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             style={{ position: 'absolute', top: -110, right: 10, zIndex: 2 }}
           >
             <Image
-              source={require("../../assets/cat3.png")}
+              source={require("../../assets/sleepyCat.png")}
               style={styles.catImage}
               resizeMode="contain"
             />

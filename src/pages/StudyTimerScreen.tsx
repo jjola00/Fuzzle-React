@@ -13,7 +13,7 @@ interface StudySessionTimerScreenProps {
  * Features an interactive circular slider to select study session duration
  * Follows the design provided in the mockup with neomorphism styling
  */
-export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = ({
+export const StudyTimerScreen: React.FC<StudySessionTimerScreenProps> = ({
   onNavigateBack,
   onStartSession,
 }) => {

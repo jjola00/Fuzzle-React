@@ -15,7 +15,7 @@ interface StudySessionsScreenProps {
  * Shows session duration, breaks taken, and whether sessions ended early
  * Follows the design provided in the mockup with neomorphism styling
  */
-export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
+export const StudyLogsScreen: React.FC<StudySessionsScreenProps> = ({
   onNavigateBack,
 }) => {
   const { theme } = useTheme();
@@ -193,7 +193,7 @@ export const StudySessionsScreen: React.FC<StudySessionsScreenProps> = ({
         Platform.OS === "web"
           ? "-5px -5px 10px #FFFFFF, 5px 5px 10px rgba(174, 174, 192, 0.3)"
           : undefined,
-      // Fallback shadows for native platforms
+      // Fallback shadows for nhative platforms
       shadowColor: Platform.OS !== "web" ? "#000" : undefined,
       shadowOffset: Platform.OS !== "web" ? { width: 0, height: 2 } : undefined,
       shadowOpacity: Platform.OS !== "web" ? 0.1 : undefined,

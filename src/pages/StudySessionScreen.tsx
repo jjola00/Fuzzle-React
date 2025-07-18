@@ -25,7 +25,7 @@ interface StudySessionInProgressScreenProps {
  *   • A purple progress ring that shrinks clockwise as time elapses
  *   • An “End early” button beneath the timer
  */
-export const StudySessionInProgressScreen: React.FC<StudySessionInProgressScreenProps> = ({
+export const StudySessionScreen: React.FC<StudySessionInProgressScreenProps> = ({
   totalMinutes,
   onEndSession,
   onRequestEndEarly,
@@ -255,7 +255,7 @@ export const StudySessionInProgressScreen: React.FC<StudySessionInProgressScreen
               Minutes remaining
             </Text>
             <Image
-              source={require("../../assets/cat4.png")}
+              source={require("../../assets/backCat.png")}
               style={styles.catImage}
               resizeMode="contain"
             />
