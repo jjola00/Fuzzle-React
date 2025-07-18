@@ -247,6 +247,7 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
     },
     minutesNumber: {
       fontSize: 45,
+      marginTop: -30,
       fontWeight: "600",
       color: "#000000",
       textAlign: "center",
@@ -292,7 +293,7 @@ export const StudySessionTimerScreen: React.FC<StudySessionTimerScreenProps> = (
     },
     startButtonText: {
       fontSize: 21,
-      fontWeight: "600",
+      fontWeight: "400",
       color: "#000000",
       textAlign: "center",
       fontFamily: "MavenPro-SemiBold",

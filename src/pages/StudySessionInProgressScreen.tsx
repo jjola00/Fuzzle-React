@@ -161,7 +161,8 @@ export const StudySessionInProgressScreen: React.FC<StudySessionInProgressScreen
     },
     minutesNumber: {
       fontSize: 45,
-      fontWeight: "600",
+      marginTop: 60,
+      fontWeight: "500",
       color: "#000000",
       textAlign: "center",
       fontFamily: "MavenPro-SemiBold",
@@ -180,7 +181,6 @@ export const StudySessionInProgressScreen: React.FC<StudySessionInProgressScreen
     catImage: {
       width: 160,
       height: 160,
-      marginTop: 16,
     },
     endButton: {
       width: 279,
@@ -203,7 +203,7 @@ export const StudySessionInProgressScreen: React.FC<StudySessionInProgressScreen
     },
     endButtonText: {
       fontSize: 21,
-      fontWeight: "600",
+      fontWeight: "400",
       color: "#000000",
       textAlign: "center",
       fontFamily: "MavenPro-SemiBold",
