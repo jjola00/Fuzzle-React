@@ -105,6 +105,7 @@ jobs:
           expo-version: ${{ env.EXPO_CLI_VERSION }}
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
+          packager: npm
 
       - name: Install dependencies
         run: |
@@ -151,6 +152,7 @@ jobs:
           expo-version: ${{ env.EXPO_CLI_VERSION }}
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
+          packager: npm
 
       - name: Install dependencies
         run: |
