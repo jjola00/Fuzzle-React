@@ -1,0 +1,162 @@
+AI Study Buddy – Hardware & Software Requirements
+=================================================
+
+0. Purpose
+----------
+Create a desktop “study‑buddy” robot that:  
+• Detects that the student is present and alert (PIR + camera eye‑tracking).  
+• Listens & speaks to answer questions through an on‑board AI assistant (wake‑word + STT + TTS).  
+• Moves small servos to animate eyes / tail when it talks or when attention drops.  
+• Shows a Pomodoro timer & basic status on a small display.  
+
+Everything below is phrased so that an engineer can start coding immediately.
+
+1. Bill of Materials
+--------------------
+| # | Part | Interface | Notes |
+|---|------|-----------|-------|
+| 1 | Raspberry Pi 4 Model B, 4 GB+ | — | Main SBC |
+| 2 | HC‑SR501 PIR motion sensor | 1 × GPIO (digital) | 5 V tolerant |
+| 3 | Pi Camera 2 (CSI‑2 ribbon) | CSI port | 1080p30 minimum |
+| 4 | Servo driver – Adafruit PCA9685 16‑Ch | I²C @0x40 | Generates 50 Hz PWM |
+| 5 | Micro 5–6 V hobby servos × N (eyes, tail…) | PWM (from #4) | Max current ≈ 500 mA each |
+| 6 | “Maker‑HAT” Audio board (MAX98357A codec or similar) | I²S + I²C | Stereo out + mono mic in |
+| 7 | I²C 0.96″ SSD1306 OLED (128×64) or I²C 1602 LCD | I²C | Display timer |
+| 8 | Momentary push‑button (user) | 1 × GPIO | Mapped to GPIO17 |
+| 9 | 5 V / 3 A regulated supply for Pi | — | USB‑C |
+|10 | 5 V / 3 A supply for servos | — | **Ground must be common with Pi** |
+
+2. Raspberry Pi 40‑Pin Header Map
+---------------------------------
+All pin numbers are **physical**. BCM column is what code must use.
+
+| Function/Part        | BCM | Pin | Voltage | Direction |
+|----------------------|-----|-----|---------|-----------|
+| **Global rails**     | —   |  1  | 3.3 V | — |
+|                      | —   |  2  | 5 V   | — |
+|                      | —   |  4  | 5 V   | — |
+|                      | —   |  6  | GND   | — |
+| **I²C bus (shared)** | SDA1 | 2 | 3  | Bi‑dir |
+| (Audio HAT ctrl +    | SCL1 | 3 | 5  | Bi‑dir |
+|  Servo driver + OLED)|     |     |    |       |
+| **Audio HAT – I²S**  | GPIO18 (BCLK) | 12 | 3.3 V | OUT |
+|                      | GPIO19 (LRCLK)| 35 | 3.3 V | OUT |
+|                      | GPIO21 (DAC OUT) | 40 | 3.3 V | OUT‑to‑speaker |
+|                      | GPIO20 (ADC IN)  | 38 | 3.3 V | IN‑from‑mic |
+| **Audio HAT button** | GPIO17 | 11 | 3.3 V | IN (pull‑up) |
+| **PIR sensor**       | GPIO23 | 16 | 3.3 V | IN (active‑high) |
+|                      | VCC → Pin 2 (5 V) | — | 5 V | — |
+|                      | GND → Pin 14/6   | — | GND | — |
+| **Servo driver PCA9685** | VCC 3.3 V → Pin 1 | — | 3.3 V | — |
+|                      | SDA/SCL shared (see I²C) | — | — | — |
+|                      | GND → Pin 6 | — | GND | — |
+|                      | V+ (5–6 V) from ext. PSU | — | 5 V | — |
+| **OLED/LCD Display** | Uses same I²C bus; no extra pins |
+
+_Unused GPIOs (4, 5, 6, 12, 13, 22, 24, 26) are free for future features._
+
+3. Electrical Limits & Safety
+-----------------------------
+* Total Pi 3.3 V rail budget must stay < 800 mA.  
+* **Servos NEVER powered from Pi** – they draw bursts > 500 mA. Power PCA9685 V+ from external 5–6 V rail and connect grounds.  
+* Keep I²C lines under 30 cm; use 4.7 kΩ pull‑ups if your breakouts lack them.  
+* PIR sensor is 5 V but output is 3.3 V logic‑safe. Confirm jumper is set to H‑L (not H‑H).  
+
+4. Software Stack
+-----------------
+* **OS** Raspberry Pi OS Bookworm (64‑bit)  
+* **Language** Python 3.11  
+* **Packages**  
+  - `gpiozero` 2.0+ (simple GPIO)  
+  - `pigpio` daemon (precise PWM fallback)  
+  - `smbus2`, `adafruit-pca9685` (servo driver)  
+  - `picamera2`, `opencv-python`, `mediapipe` (eye tracking)  
+  - `sounddevice` + `wavio` or `pyalsaaudio` (I²S access)  
+  - `speechrecognition`, `openai` (STT+LLM)  
+  - `pyttsx3` or `coqui-tts` (offline TTS)  
+  - `rich` (CLI UI)  
+* **Runtime services**  
+  - `pigpiod` autostart.  
+  - Enable I²C and I²S overlays in `/boot/config.txt`  
+    ```
+    dtparam=i2c_arm=on
+    dtoverlay=i2s-mmap
+    dtoverlay=hifiberry-dac
+    ```  
+  - Camera enabled via `libcamera`.
+
+5. Functional Requirements & Thresholds
+---------------------------------------
+### 5.1 Motion Detection
+* Poll PIR **GPIO23** with edge interrupts.  
+* Debounce: ignore triggers shorter than **100 ms**.  
+* If no motion for **15 min** ‑‑> standby (dim display, mute mics).  
+
+### 5.2 Eye‑Presence Monitoring
+* Capture 640×480 @ 15 fps.  
+* Use MediaPipe iris model.  
+* If eyes not detected **≥ 3 s** raise `DROWSY` event →  
+  - Say “Stay focused!”  
+  - Wiggle servos (#4) tail left/right 2 ×.  
+
+### 5.3 Conversational AI
+* Wake‑word “Study Buddy” (Porcupine).  
+* After wake, record until **500 ms** of silence.  
+* Transcribe via OpenAI Whisper.  
+* Pass text to GPT‑4o with predefined system prompt “You are an encouraging tutor”.  
+* TTS reply via `coqui-tts`, playback to DAC.  
+* During speech playback, flash eye servos at **±15°** around neutral.
+
+### 5.4 Servo Animation
+* Channel map (PCA9685):  
+  | Channel | Part | Min us | Max us | Neutral | Comment |
+  |---------|------|--------|--------|---------|---------|
+  | 0 | Left eye | 500 | 2500 | 1500 | look centre |
+  | 1 | Right eye| … | … | … | |
+  | 2 | Tail     | 600 | 2400 | 1500 | swish |
+
+* Update at 50 Hz.  
+* Absolute travel limited 0–180 °.  
+
+### 5.5 Display
+* Show 25 min Pomodoro countdown once motion or wake‑word detected.  
+* Line 1: “Focus: MM:SS” counting down.  
+* Line 2: status icons: 📶 (Wi‑Fi), 🔊 (mute state), 🙂 / 😴.  
+* When timer hits 00:00 play short chime, set break 5 min.  
+
+6. Software Architecture (high‑level)
+-------------------------------------
+```
+main.py
+ ├─ core/
+ │   ├─ sensors.py      # PIR + camera
+ │   ├─ audio_io.py     # I2S streams
+ │   ├─ servo_ctrl.py   # PCA9685 wrapper
+ │   ├─ display.py      # OLED/LCD
+ │   ├─ ai_agent.py     # STT, GPT, TTS
+ │   └─ events.py       # pub‑sub event bus
+ └─ app.py              # state machine (IDLE, FOCUS, BREAK, SLEEP)
+```
+
+7. Build & Test Checklist
+-------------------------
+1. **Smoke‑test power rails**: Pi < 700 mA idle; servos on ext. supply.  
+2. `i2cdetect -y 1` shows addresses 0x40 (PCA9685) + 0x3C (OLED) + 0x1A (Audio HAT).  
+3. Play sine‑wave WAV → speakers; record mic loop‑back, SNR > 60 dB.  
+4. Eye detection unit‑test: ≥ 95 % positive detection over 100 frames.  
+5. Full Pomodoro cycle without crash ≥ 3 h soak‑test.  
+
+8. Known Conflicts & Resolutions
+--------------------------------
+* I²C is **shared** by three devices; keep total bus capacitance < 400 pF.  
+* GPIO18 is used by I²S, cannot be used for PWM. Servo driver offloads PWM anyway.  
+* Only one camera can be attached to CSI port.  
+
+9. Deliverables
+---------------
+* Complete Python project repo.  
+* `requirements.txt` for pip.  
+* `systemd` service file `studybuddy.service` (Boot‑at‑start).  
+* Calibration script `calibrate_servos.py`.
+
+EOF
