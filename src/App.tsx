@@ -60,13 +60,15 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     (async () => {
       try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user) {
-          setUserId(user.id);
-        } else {
-          console.warn("No authenticated user found – userId null");
+        if (supabase) {
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          if (user) {
+            setUserId(user.id);
+          } else {
+            console.warn("No authenticated user found – userId null");
+          }
         }
       } catch (err) {
         console.error("Unable to fetch user", err);
@@ -144,8 +146,8 @@ const AppContent: React.FC = () => {
             setActiveSessionMinutes(minutes);
             setRemainingSeconds(minutes * 60);
 
-            // Create session row if authenticated
-            if (userId) {
+            // Create session row if authenticated and backend is configured
+            if (userId && supabase) {
               const session = await databaseService.createSession({
                 user_id: userId,
                 duration_minutes: minutes,

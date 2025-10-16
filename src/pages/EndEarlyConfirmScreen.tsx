@@ -191,7 +191,7 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
       return;
     }
 
-    const dbEnabled = Boolean(userId && sessionId);
+    const dbEnabled = Boolean(userId && sessionId && supabase);
 
     if (!dbEnabled) {
       // Offline / placeholder mode — skip DB writes, go straight to next screen
@@ -204,7 +204,7 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
       setSubmitting(true);
 
       // Upsert into points table
-      const { data: existing, error } = await supabase
+      const { data: existing, error } = await supabase!
         .from("points")
         .select("*")
         .eq("user_id", userId)
@@ -214,7 +214,7 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
 
       if (existing) {
         const updatedTotal = (existing.total_points ?? 0) + parsed;
-        const { error: updErr } = await supabase
+        const { error: updErr } = await supabase!
           .from("points")
           .update({
             total_points: updatedTotal,
@@ -223,7 +223,7 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
           .eq("user_id", userId);
         if (updErr) throw updErr;
       } else {
-        const { error: insErr } = await supabase.from("points").insert({
+        const { error: insErr } = await supabase!.from("points").insert({
           user_id: userId,
           total_points: parsed,
           last_updated: new Date().toISOString(),
@@ -232,7 +232,7 @@ export const EndEarlyConfirmScreen: React.FC<EndEarlyConfirmScreenProps> = ({
       }
 
       // Update session row with points_earned & ended_early flag
-      const { error: sessErr } = await supabase
+      const { error: sessErr } = await supabase!
         .from("sessions")
         .update({ points_earned: parsed, ended_early: true })
         .eq("id", sessionId);

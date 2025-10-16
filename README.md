@@ -1,10 +1,6 @@
 # Fuzzle React Native App
 
-[![CI/CD Pipeline](https://github.com/your-username/fuzzle-react/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/fuzzle-react/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/your-username/fuzzle-react/branch/main/graph/badge.svg)](https://codecov.io/gh/your-username/fuzzle-react)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-A modern React Native mobile application built with TypeScript, following best practices and clean architecture principles.
+A clean Expo + React Native app written in TypeScript. Runs locally without extra services; optional Supabase enables persistence when `.env` is provided.
 
 ## 🚀 Getting Started
 
@@ -13,7 +9,6 @@ A modern React Native mobile application built with TypeScript, following best p
 - Node.js (v18 or higher)
 - npm or yarn
 - Expo CLI
-- EAS CLI (for builds and deployments)
 - React Native development environment
 
 ### Quick Setup
@@ -25,11 +20,10 @@ git clone <repository-url>
 cd Fuzzle-React
 ```
 
-2. Run the setup script
+2. Install dependencies
 
 ```bash
-chmod +x scripts/setup-ci.sh
-./scripts/setup-ci.sh
+npm ci
 ```
 
 3. Configure your environment
@@ -39,44 +33,17 @@ chmod +x scripts/setup-ci.sh
 cp .env.example .env
 ```
 
-4. Start the development server
+3. Start the development server
 
 ```bash
 npm start
 ```
 
-## 🏗️ CI/CD Pipeline
+## ✨ Highlights
 
-This project includes a comprehensive CI/CD pipeline with:
-
-### ✅ Automated Quality Checks
-
-- **TypeScript**: Strict type checking
-- **ESLint**: Code quality and style enforcement
-- **Prettier**: Consistent code formatting
-- **Tests**: Unit tests with coverage reporting
-- **Security**: Dependency vulnerability scanning
-
-### 🔨 Automated Building
-
-- **Preview Builds**: For pull requests
-- **Production Builds**: For releases
-- **Multiple Platforms**: iOS and Android support
-- **EAS Integration**: Managed build process
-
-### 🚀 Automated Deployment
-
-- **App Store**: Automated iOS submissions
-- **Play Store**: Automated Android submissions
-- **OTA Updates**: Over-the-air updates for quick fixes
-- **Manual Deployment**: Workflow dispatch for releases
-
-### 📊 Monitoring
-
-- **Coverage Reports**: Code coverage tracking
-- **Build Status**: Real-time build monitoring
-- **Slack Notifications**: Team notifications
-- **Security Alerts**: Automated vulnerability reports
+- TypeScript-first codebase with strict checks
+- Theming and simple screen flow without external nav libs
+- Optional Supabase integration (disabled by default)
 
 ## 📁 Project Structure
 
@@ -122,13 +89,9 @@ npm test            # Run tests once
 npm run test:watch  # Run tests in watch mode
 npm run test:coverage # Run tests with coverage
 
-# Building & Deployment
-npm run build:ios      # Build iOS app
-npm run build:android  # Build Android app
-npm run build:all      # Build both platforms
-npm run submit:ios     # Submit to App Store
-npm run submit:android # Submit to Play Store
-npm run update         # Publish OTA update
+# Building
+# For native builds, use Expo prebuild and your preferred tooling
+npm run prebuild
 ```
 
 ### Code Standards

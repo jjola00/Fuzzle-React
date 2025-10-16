@@ -29,6 +29,9 @@ class DatabaseService {
     limit: number = 5,
   ): Promise<SessionData[]> {
     try {
+      if (!supabase) {
+        return [];
+      }
       const query = supabase
         .from("sessions")
         .select("*")
@@ -58,6 +61,9 @@ class DatabaseService {
    */
   async getSession(sessionId: string): Promise<SessionData | null> {
     try {
+      if (!supabase) {
+        return null;
+      }
       const { data, error } = await supabase
         .from("sessions")
         .select("*")
@@ -88,6 +94,21 @@ class DatabaseService {
     sessionData: Omit<SessionData, "id" | "created_at">,
   ): Promise<SessionData> {
     try {
+      if (!supabase) {
+        // Generate a mock session object for local demo without backend
+        const mock: SessionData = {
+          id: `temp-${Date.now()}`,
+          user_id: sessionData.user_id,
+          duration_minutes: sessionData.duration_minutes,
+          breaks_taken: sessionData.breaks_taken,
+          hints_given: sessionData.hints_given,
+          distractions: sessionData.distractions,
+          points_earned: sessionData.points_earned,
+          ended_early: sessionData.ended_early,
+          created_at: new Date().toISOString(),
+        };
+        return mock;
+      }
       const { data, error } = await supabase
         .from("sessions")
         .insert([sessionData])
@@ -116,6 +137,9 @@ class DatabaseService {
     updates: Partial<SessionData>,
   ): Promise<SessionData | null> {
     try {
+      if (!supabase) {
+        return null;
+      }
       const { data, error } = await supabase
         .from("sessions")
         .update(updates)
@@ -145,6 +169,9 @@ class DatabaseService {
    */
   async deleteSession(sessionId: string): Promise<boolean> {
     try {
+      if (!supabase) {
+        return false;
+      }
       const { data, error } = await supabase
         .from("sessions")
         .delete()
@@ -170,6 +197,9 @@ class DatabaseService {
    */
   async getSessionsByUser(userId: string): Promise<SessionData[]> {
     try {
+      if (!supabase) {
+        return [];
+      }
       const { data, error } = await supabase
         .from("sessions")
         .select("*")

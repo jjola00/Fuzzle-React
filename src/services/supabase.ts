@@ -5,22 +5,20 @@ const supabaseUrl: string | undefined = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey: string | undefined =
   process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 
-// Validate environment variables
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    "Missing Supabase environment variables. Please check your .env file.",
+// Create and export the Supabase client if env vars are present; otherwise null
+export const supabase =
+  supabaseUrl && supabaseAnonKey
+    ? createClient(supabaseUrl, supabaseAnonKey)
+    : null;
+
+if (!supabase) {
+  // Log a friendly message so local development can proceed without crashing
+  // When .env is configured, Supabase-powered features will enable automatically
+  // eslint-disable-next-line no-console
+  console.warn(
+    "Supabase is not configured. Set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY to enable backend features.",
   );
 }
-
-// At this point, supabaseUrl and supabaseAnonKey are guaranteed to be non-null
-const validatedSupabaseUrl = supabaseUrl!;
-const validatedSupabaseAnonKey = supabaseAnonKey!;
-
-// Create and export the Supabase client
-export const supabase = createClient(
-  validatedSupabaseUrl,
-  validatedSupabaseAnonKey,
-);
 
 // Database types matching the schema
 export interface User {
